@@ -6,19 +6,58 @@ import Link from "next/link";
 import { Product } from "@/data/products";
 import { useCurrency } from "@/components/CurrencyContext";
 import { useCart } from "@/components/CartContext";
+import { useProducts } from "@/components/ProductContext";
 import ProductCard from "@/components/ProductCard";
 
 interface ProductDetailClientProps {
-  product: Product;
-  relatedProducts: Product[];
+  product?: Product | null;
+  fallbackId?: string;
+  relatedProducts?: Product[];
 }
 
-export default function ProductDetailClient({ product, relatedProducts }: ProductDetailClientProps) {
+export default function ProductDetailClient({
+  product: initialProduct,
+  fallbackId,
+  relatedProducts = [],
+}: ProductDetailClientProps) {
   const { currency, formatPrice, minimumOrderFormatted } = useCurrency();
   const { addToCart } = useCart();
+  const { getProductById, products } = useProducts();
+
+  const product = initialProduct || (fallbackId ? getProductById(fallbackId) : null);
+
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(product.moq);
+  const [quantity, setQuantity] = useState(product?.moq || 1);
   const [addedSuccess, setAddedSuccess] = useState(false);
+
+  if (!product) {
+    return (
+      <div className="bg-[#FAF9F6] min-h-screen py-16 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center max-w-md w-full mx-4 shadow-sm">
+          <div className="text-3xl mb-3">🔍</div>
+          <h2 className="font-serif-luxury text-xl font-bold text-slate-900 mb-2">
+            Wholesale Listing Not Found
+          </h2>
+          <p className="text-xs text-slate-500 mb-6 leading-relaxed">
+            This piece may have been retired or updated. Browse our full live 925 solid silver catalog for active factory lines.
+          </p>
+          <Link
+            href="/catalog"
+            className="bg-slate-950 text-white text-xs font-bold px-6 py-3 rounded-lg inline-block uppercase tracking-wider hover:bg-slate-800 transition"
+          >
+            Browse Wholesale Catalog
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const computedRelated =
+    relatedProducts && relatedProducts.length > 0
+      ? relatedProducts
+      : products
+          .filter((p) => p.category === product.category && p.id !== product.id)
+          .slice(0, 3);
 
   const wholesaleUnitPrice = currency === "USD" ? product.priceUSD : product.priceGBP;
   const suggestedMSRP = currency === "USD" ? product.suggestedRetailUSD : product.suggestedRetailGBP;
@@ -26,7 +65,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
   const markupPercentage = Math.round((profitPerUnit / wholesaleUnitPrice) * 100);
 
   // Calculate volume discount based on selected quantity
-  const sortedTiers = [...product.tierPricing].sort((a, b) => b.minQuantity - a.minQuantity);
+  const sortedTiers = [...(product.tierPricing || [])].sort((a, b) => b.minQuantity - a.minQuantity);
   const applicableTier = sortedTiers.find((t) => quantity >= t.minQuantity);
   const currentDiscountRate = applicableTier ? applicableTier.discountPercentage : 0;
   const effectiveUnitPrice = wholesaleUnitPrice * (1 - currentDiscountRate / 100);
@@ -294,13 +333,13 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
         </div>
 
         {/* Related Wholesale Recommendations */}
-        {relatedProducts.length > 0 && (
+        {computedRelated.length > 0 && (
           <div className="mt-16">
             <h2 className="font-serif-luxury text-2xl font-bold text-slate-950 mb-6">
               Frequently Ordered Together in {product.category}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedProducts.map((p) => (
+              {computedRelated.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
             </div>

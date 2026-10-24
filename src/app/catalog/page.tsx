@@ -2,14 +2,16 @@
 
 import React, { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { PRODUCTS, CATEGORIES, Product } from "@/data/products";
+import { CATEGORIES, Product } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { useCurrency } from "@/components/CurrencyContext";
+import { useProducts } from "@/components/ProductContext";
 
 function CatalogContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("cat") || "All";
   const { currency, minimumOrderFormatted } = useCurrency();
+  const { products } = useProducts();
 
   const [category, setCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,7 +21,7 @@ function CatalogContent() {
   const finishes = ["All", "Rhodium", "Diamond-Cut", "Satin"];
 
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((item: Product) => {
+    return products.filter((item: Product) => {
       // Category filter
       if (category !== "All" && item.category !== category) return false;
 
@@ -51,7 +53,7 @@ function CatalogContent() {
       }
       return b.rating - a.rating;
     });
-  }, [category, selectedFinish, searchQuery, sortBy, currency]);
+  }, [products, category, selectedFinish, searchQuery, sortBy, currency]);
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-10">

@@ -46,7 +46,7 @@ export default async function ProductPage({
   const product = PRODUCTS.find((p) => p.id === id);
 
   if (!product) {
-    notFound();
+    return <ProductDetailClient fallbackId={id} product={null} relatedProducts={[]} />;
   }
 
   const relatedProducts = PRODUCTS.filter(

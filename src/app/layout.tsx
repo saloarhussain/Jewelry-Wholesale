@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { CurrencyProvider } from "@/components/CurrencyContext";
 import { AuthProvider } from "@/components/AuthContext";
 import { CartProvider } from "@/components/CartContext";
+import { ProductProvider } from "@/components/ProductContext";
 import JsonLd, { WHOLESALE_STORE_SCHEMA } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
@@ -93,11 +94,13 @@ export default function RootLayout({
       <body className="antialiased min-h-screen flex flex-col font-sans-clean bg-[#FCFCFD]">
         <CurrencyProvider>
           <AuthProvider>
-            <CartProvider>
-              <Header />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </CartProvider>
+            <ProductProvider>
+              <CartProvider>
+                <Header />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </CartProvider>
+            </ProductProvider>
           </AuthProvider>
         </CurrencyProvider>
       </body>
