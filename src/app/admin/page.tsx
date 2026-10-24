@@ -1,63 +1,22 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { INITIAL_ORDERS, WholesaleOrder } from "@/data/orders";
 import { Product, CATEGORIES } from "@/data/products";
 import { useAuth } from "@/components/AuthContext";
 import { useProducts } from "@/components/ProductContext";
 
-// Curated high-res jewelry photography presets for instant 1-click selection
-const IMAGE_PRESETS = [
-  {
-    name: "Herringbone Chain",
-    category: "Chains",
-    url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Bold Dome Ring",
-    category: "Rings",
-    url: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Signet Ring",
-    category: "Rings",
-    url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Chunky Curb Chain",
-    category: "Chains",
-    url: "https://images.unsplash.com/photo-1611591475155-42e5232d3925?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Huggie Hoops",
-    category: "Earrings",
-    url: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Paperclip Necklace",
-    category: "Necklaces",
-    url: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Bangle Bracelet",
-    category: "Bracelets",
-    url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Pave Crystal Studs",
-    category: "Earrings",
-    url: "https://images.unsplash.com/photo-1600003014755-ba31aa59c4b6?auto=format&fit=crop&w=900&q=80",
-  },
-];
-
-export default function AdminPortalPage() {
+function AdminPortalContent() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get("tab") === "catalog" ? "catalog" : "orders";
+  const initialStatus = searchParams.get("status");
+
   const {
     products,
-    addProduct,
-    updateProduct,
     updateStock,
     setStockDirect,
     deleteProduct,
@@ -66,8 +25,17 @@ export default function AdminPortalPage() {
 
   const [orders, setOrders] = useState<WholesaleOrder[]>([]);
   const [filterCountry, setFilterCountry] = useState<"All" | "UK" | "USA">("All");
-  const [activeTab, setActiveTab] = useState<"orders" | "catalog">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "catalog">(initialTab);
   const [editSuccessMsg, setEditSuccessMsg] = useState("");
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+
+  // Check if redirected after saving product
+  useEffect(() => {
+    if (initialStatus === "saved") {
+      setEditSuccessMsg("Wholesale product listing successfully saved & updated in catalog!");
+      setTimeout(() => setEditSuccessMsg(""), 4000);
+    }
+  }, [initialStatus]);
 
   // ==================== INVENTORY FILTER & SORT STATE ====================
   const [searchQuery, setSearchQuery] = useState("");
@@ -75,33 +43,6 @@ export default function AdminPortalPage() {
   const [filterStockStatus, setFilterStockStatus] = useState<"All" | "In Stock" | "Low Stock" | "Out of Stock">("All");
   const [filterFinish, setFilterFinish] = useState<string>("All");
   const [sortBy, setSortBy] = useState<"stock-asc" | "stock-desc" | "price-asc" | "price-desc" | "weight" | "name">("name");
-
-  // ==================== MODAL STATE (ADD / EDIT PRODUCT) ====================
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-
-  // Form Fields State
-  const [formName, setFormName] = useState("");
-  const [formSku, setFormSku] = useState("");
-  const [formCategory, setFormCategory] = useState<Product["category"]>("Chains");
-  const [formBadge, setFormBadge] = useState<string>("");
-  const [formPurity, setFormPurity] = useState("Solid 925 Sterling Silver");
-  const [formGramWeight, setFormGramWeight] = useState("12.5g");
-  const [formFinish, setFormFinish] = useState("Diamond-Cut Mirror Polish & Rhodium Barrier");
-  const [formDimensions, setFormDimensions] = useState("Length: 45cm (18 in) | Width: 3.5mm");
-  const [formHallmarked, setFormHallmarked] = useState(true);
-  const [formPriceGBP, setFormPriceGBP] = useState<number>(14.50);
-  const [formPriceUSD, setFormPriceUSD] = useState<number>(18.85);
-  const [formSuggestedRetailGBP, setFormSuggestedRetailGBP] = useState<number>(48.00);
-  const [formSuggestedRetailUSD, setFormSuggestedRetailUSD] = useState<number>(62.00);
-  const [formMoq, setFormMoq] = useState<number>(3);
-  const [formStockCount, setFormStockCount] = useState<number>(120);
-  const [formPrimaryImage, setFormPrimaryImage] = useState(IMAGE_PRESETS[0].url);
-  const [formSecondaryImage, setFormSecondaryImage] = useState("");
-  const [formShortDescription, setFormShortDescription] = useState("");
-  const [formDescription, setFormDescription] = useState("");
-  const [formSeoKeywords, setFormSeoKeywords] = useState("wholesale sterling silver, 925 solid silver bulk");
 
   // Load orders
   useEffect(() => {
@@ -163,173 +104,6 @@ export default function AdminPortalPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  // Helper to generate a new unique SKU
-  const generateNewSku = (category: string) => {
-    const prefix = category.slice(0, 3).toUpperCase();
-    const randNum = Math.floor(100 + Math.random() * 900);
-    return `AG-${prefix}-${randNum}`;
-  };
-
-  // Open Modal for New Product
-  const handleOpenAddModal = () => {
-    setEditingId(null);
-    const newSku = generateNewSku("Chains");
-    setFormName("");
-    setFormSku(newSku);
-    setFormCategory("Chains");
-    setFormBadge("New In");
-    setFormPurity("Solid 925 Sterling Silver");
-    setFormGramWeight("12.5g");
-    setFormFinish("Diamond-Cut Mirror Polish & Rhodium Barrier");
-    setFormDimensions("Length: 45cm (18 in) | Width: 3.5mm");
-    setFormHallmarked(true);
-    setFormPriceGBP(16.50);
-    setFormPriceUSD(21.45);
-    setFormSuggestedRetailGBP(52.00);
-    setFormSuggestedRetailUSD(68.00);
-    setFormMoq(3);
-    setFormStockCount(120);
-    setFormPrimaryImage(IMAGE_PRESETS[0].url);
-    setFormSecondaryImage("");
-    setFormShortDescription("Solid 925 sterling silver wholesale jewelry. Anti-tarnish rhodium barrier, nickel-free.");
-    setFormDescription("Engineered from certified solid 925 sterling silver with a diamond-cut mirror finish. Stamped with 925 authenticity hallmark compliant with UK Assay Office and US FTC precious metals standards.");
-    setFormSeoKeywords("wholesale silver chains, 925 solid sterling silver bulk");
-    setIsModalOpen(true);
-  };
-
-  // Open Modal for Editing an existing Product
-  const handleOpenEditModal = (p: Product) => {
-    setEditingId(p.id);
-    setFormName(p.name);
-    setFormSku(p.sku);
-    setFormCategory(p.category);
-    setFormBadge(p.badge || "");
-    setFormPurity(p.purity);
-    setFormGramWeight(p.gramWeight);
-    setFormFinish(p.finish);
-    setFormDimensions(p.dimensions);
-    setFormHallmarked(p.hallmarked);
-    setFormPriceGBP(p.priceGBP);
-    setFormPriceUSD(p.priceUSD);
-    setFormSuggestedRetailGBP(p.suggestedRetailGBP);
-    setFormSuggestedRetailUSD(p.suggestedRetailUSD);
-    setFormMoq(p.moq);
-    setFormStockCount(p.stockCount);
-    setFormPrimaryImage(p.images[0] || IMAGE_PRESETS[0].url);
-    setFormSecondaryImage(p.images[1] || "");
-    setFormShortDescription(p.shortDescription);
-    setFormDescription(p.description);
-    setFormSeoKeywords(p.seoKeywords ? p.seoKeywords.join(", ") : "");
-    setIsModalOpen(true);
-  };
-
-  // Handle Price GBP change to auto-calculate recommended USD and retail MSRP
-  const handlePriceGBPChange = (val: number) => {
-    setFormPriceGBP(val);
-    const usd = Number((val * 1.30).toFixed(2));
-    setFormPriceUSD(usd);
-    const msrpGBP = Number((val * 3.2).toFixed(2));
-    setFormSuggestedRetailGBP(msrpGBP);
-    const msrpUSD = Number((usd * 3.2).toFixed(2));
-    setFormSuggestedRetailUSD(msrpUSD);
-  };
-
-  // Save Product (Create or Update)
-  const handleSubmitProduct = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formName.trim()) {
-      alert("Please provide a product title.");
-      return;
-    }
-    if (!formSku.trim()) {
-      alert("Please provide a valid SKU.");
-      return;
-    }
-
-    const imagesArray = [formPrimaryImage.trim()];
-    if (formSecondaryImage.trim()) {
-      imagesArray.push(formSecondaryImage.trim());
-    }
-
-    const keywordsArray = formSeoKeywords
-      .split(",")
-      .map((k) => k.trim())
-      .filter((k) => k.length > 0);
-
-    const slug = formName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-
-    const tierPricing = [
-      { minQuantity: formMoq, discountPercentage: 0 },
-      { minQuantity: 15, discountPercentage: 8 },
-      { minQuantity: 50, discountPercentage: 15 },
-      { minQuantity: 100, discountPercentage: 22 },
-    ];
-
-    if (editingId) {
-      // Update existing
-      updateProduct(editingId, {
-        name: formName.trim(),
-        sku: formSku.trim(),
-        category: formCategory,
-        badge: formBadge || undefined,
-        purity: formPurity.trim(),
-        gramWeight: formGramWeight.trim(),
-        finish: formFinish.trim(),
-        dimensions: formDimensions.trim(),
-        hallmarked: formHallmarked,
-        priceGBP: Number(formPriceGBP),
-        priceUSD: Number(formPriceUSD),
-        suggestedRetailGBP: Number(formSuggestedRetailGBP),
-        suggestedRetailUSD: Number(formSuggestedRetailUSD),
-        moq: Number(formMoq),
-        stockCount: Number(formStockCount),
-        images: imagesArray,
-        shortDescription: formShortDescription.trim(),
-        description: formDescription.trim(),
-        seoKeywords: keywordsArray,
-      });
-      setEditSuccessMsg(`Product "${formName}" updated successfully.`);
-    } else {
-      // Create new
-      const newProduct: Product = {
-        id: `slv-${Date.now().toString().slice(-6)}`,
-        name: formName.trim(),
-        slug,
-        sku: formSku.trim(),
-        category: formCategory,
-        badge: formBadge || undefined,
-        purity: formPurity.trim(),
-        gramWeight: formGramWeight.trim(),
-        finish: formFinish.trim(),
-        dimensions: formDimensions.trim(),
-        hallmarked: formHallmarked,
-        priceGBP: Number(formPriceGBP),
-        priceUSD: Number(formPriceUSD),
-        suggestedRetailGBP: Number(formSuggestedRetailGBP),
-        suggestedRetailUSD: Number(formSuggestedRetailUSD),
-        moq: Number(formMoq),
-        stockCount: Number(formStockCount),
-        images: imagesArray,
-        shortDescription: formShortDescription.trim(),
-        description: formDescription.trim(),
-        rating: 5.0,
-        reviewsCount: 1,
-        tierPricing,
-        seoKeywords: keywordsArray,
-      };
-
-      addProduct(newProduct);
-      setEditSuccessMsg(`New product "${formName}" published to wholesale catalog!`);
-    }
-
-    setIsModalOpen(false);
-    setTimeout(() => setEditSuccessMsg(""), 4000);
   };
 
   // Confirm Delete
@@ -401,11 +175,6 @@ export default function AdminPortalPage() {
   const totalInventoryValueUSD = products.reduce((sum, p) => sum + p.priceUSD * p.stockCount, 0);
   const lowStockCount = products.filter((p) => p.stockCount < 20).length;
 
-  // Real-time Retail Margin in Add/Edit Modal
-  const modalMarginProfitGBP = Number((formSuggestedRetailGBP - formPriceGBP).toFixed(2));
-  const modalMarkupPercent = formPriceGBP > 0 ? Math.round((modalMarginProfitGBP / formPriceGBP) * 100) : 0;
-  const modalKeystoneMultiple = formPriceGBP > 0 ? (formSuggestedRetailGBP / formPriceGBP).toFixed(1) : "0.0";
-
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-8 sm:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -424,12 +193,13 @@ export default function AdminPortalPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <button
-              onClick={handleOpenAddModal}
+            {/* Opens dedicated standalone webpage */}
+            <Link
+              href="/admin/products/new"
               className="bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm transition flex items-center gap-1.5"
             >
               <span className="text-amber-400 font-extrabold text-sm">+</span> Add New Product
-            </button>
+            </Link>
             <button
               onClick={handleExportCSV}
               className="bg-white border border-slate-300 hover:border-slate-950 text-slate-800 text-xs font-bold px-3.5 py-2.5 rounded-lg shadow-sm transition flex items-center gap-1.5"
@@ -758,12 +528,13 @@ export default function AdminPortalPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
-                  <button
-                    onClick={handleOpenAddModal}
+                  {/* Dedicated Webpage Link for Add New Product */}
+                  <Link
+                    href="/admin/products/new"
                     className="flex-1 sm:flex-initial bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black px-4 py-2.5 rounded-lg shadow-sm transition flex items-center justify-center gap-1.5 uppercase tracking-wider"
                   >
                     <span>➕</span> Add New Product Listing
-                  </button>
+                  </Link>
                   <button
                     onClick={() => {
                       if (confirm("Reset wholesale catalog back to initial factory SKUs?")) {
@@ -1020,12 +791,12 @@ export default function AdminPortalPage() {
                             >
                               Preview
                             </Link>
-                            <button
-                              onClick={() => handleOpenEditModal(p)}
+                            <Link
+                              href={`/admin/products/new?edit=${p.id}`}
                               className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] font-bold px-2.5 py-1 rounded transition"
                             >
                               Edit
-                            </button>
+                            </Link>
                             <button
                               onClick={() => setProductToDelete(p)}
                               className="text-red-500 hover:text-red-700 text-[11px] font-bold px-1.5 py-1 transition"
@@ -1181,13 +952,13 @@ export default function AdminPortalPage() {
                                 >
                                   👁️ Preview
                                 </Link>
-                                <button
-                                  onClick={() => handleOpenEditModal(p)}
+                                <Link
+                                  href={`/admin/products/new?edit=${p.id}`}
                                   className="bg-white hover:bg-slate-100 text-slate-900 px-2.5 py-1.5 rounded text-[11px] font-bold border border-slate-300 transition"
-                                  title="Edit product details"
+                                  title="Edit product details in dedicated page"
                                 >
                                   ✏️ Edit
-                                </button>
+                                </Link>
                                 <button
                                   onClick={() => setProductToDelete(p)}
                                   className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded transition"
@@ -1205,452 +976,6 @@ export default function AdminPortalPage() {
                 </div>
               </div>
             )}
-          </div>
-        )}
-
-        {/* ========================================================================= */}
-        {/* ADD / EDIT PRODUCT MODAL (COMPLETE WITH ALL NECESSARY B2B SILVER FIELDS)  */}
-        {/* ========================================================================= */}
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-fade-in">
-              {/* Modal Top Header */}
-              <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between flex-shrink-0">
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded">
-                    {editingId ? "Edit Wholesale Listing" : "New Wholesale Silver Listing"}
-                  </span>
-                  <h3 className="font-serif-luxury text-xl font-bold text-slate-950 mt-1">
-                    {editingId ? `Edit ${formName || "Product"}` : "Create New 925 Jewelry Product"}
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-sm transition"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Modal Body Form */}
-              <form onSubmit={handleSubmitProduct} className="p-4 sm:p-6 overflow-y-auto space-y-6 text-xs flex-grow">
-                {/* 1. Identification & Classification */}
-                <div className="space-y-3">
-                  <h4 className="font-serif-luxury text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
-                    <span>1.</span> Product Identification &amp; Category
-                  </h4>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div className="sm:col-span-2">
-                      <label className="font-bold text-slate-700 block mb-1">
-                        Product Title / Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formName}
-                        onChange={(e) => setFormName(e.target.value)}
-                        placeholder="e.g. Diamond-Cut Cuban Curb Chain (5.5mm) Solid 925"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="font-bold text-slate-700">SKU Code *</label>
-                        <button
-                          type="button"
-                          onClick={() => setFormSku(generateNewSku(formCategory))}
-                          className="text-[10px] text-amber-800 hover:underline font-bold"
-                        >
-                          ⚡ Auto-Generate
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        required
-                        value={formSku}
-                        onChange={(e) => setFormSku(e.target.value)}
-                        placeholder="AG-NECK-009"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono font-bold focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">Category *</label>
-                      <select
-                        value={formCategory}
-                        onChange={(e) => {
-                          const cat = e.target.value as Product["category"];
-                          setFormCategory(cat);
-                          if (!editingId) setFormSku(generateNewSku(cat));
-                        }}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
-                      >
-                        {CATEGORIES.map((c) => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">Merchandising Badge</label>
-                      <select
-                        value={formBadge}
-                        onChange={(e) => setFormBadge(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
-                      >
-                        <option value="">No Badge</option>
-                        <option value="Bestseller">Bestseller</option>
-                        <option value="New In">New In</option>
-                        <option value="High Margin">High Margin</option>
-                        <option value="Limited Run">Limited Run</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">
-                        Assay Hallmarking Status
-                      </label>
-                      <label className="flex items-center gap-2 p-2.5 bg-slate-50 border border-slate-300 rounded-lg cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={formHallmarked}
-                          onChange={(e) => setFormHallmarked(e.target.checked)}
-                          className="rounded text-slate-950 focus:ring-slate-950"
-                        />
-                        <span className="font-medium text-slate-800">
-                          UK Assay Office Laser/Punch Hallmarked
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 2. Metal Fineness & Specifications */}
-                <div className="space-y-3 pt-2">
-                  <h4 className="font-serif-luxury text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
-                    <span>2.</span> Precious Metal &amp; Physical Specifications
-                  </h4>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">Metal Purity *</label>
-                      <input
-                        type="text"
-                        required
-                        value={formPurity}
-                        onChange={(e) => setFormPurity(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">
-                        Gram Weight (Crucial for Silver Pricing) *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formGramWeight}
-                        onChange={(e) => setFormGramWeight(e.target.value)}
-                        placeholder="e.g. 14.8g"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono font-bold focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">
-                        Protective Coating &amp; Finish *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formFinish}
-                        onChange={(e) => setFormFinish(e.target.value)}
-                        placeholder="Diamond-Cut Mirror Polish & Rhodium Barrier"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">
-                        Dimensions &amp; Sizing Specs *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formDimensions}
-                        onChange={(e) => setFormDimensions(e.target.value)}
-                        placeholder="Length: 50cm (20 in) | Width: 4.5mm"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. Wholesale Pricing & Retail Keystoning Margins */}
-                <div className="space-y-3 pt-2">
-                  <h4 className="font-serif-luxury text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
-                    <span>3.</span> Wholesale Pricing &amp; Boutique Retail Margins
-                  </h4>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">Wholesale (GBP £) *</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="1"
-                        required
-                        value={formPriceGBP}
-                        onChange={(e) => handlePriceGBPChange(parseFloat(e.target.value) || 0)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">Wholesale (USD $) *</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="1"
-                        required
-                        value={formPriceUSD}
-                        onChange={(e) => setFormPriceUSD(parseFloat(e.target.value) || 0)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">Retail MSRP (GBP £)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="1"
-                        required
-                        value={formSuggestedRetailGBP}
-                        onChange={(e) => setFormSuggestedRetailGBP(parseFloat(e.target.value) || 0)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">Retail MSRP (USD $)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="1"
-                        required
-                        value={formSuggestedRetailUSD}
-                        onChange={(e) => setFormSuggestedRetailUSD(parseFloat(e.target.value) || 0)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Real-Time Margin Callout */}
-                  <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex items-center justify-between text-xs text-emerald-950">
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">💎</span>
-                      <div>
-                        <span className="font-bold">Boutique Retailer Margin Potential:</span>
-                        <span className="block text-[11px] opacity-90">
-                          Profit: £{modalMarginProfitGBP.toFixed(2)} per unit ({modalMarkupPercent}% markup)
-                        </span>
-                      </div>
-                    </div>
-                    <span className="font-black text-sm text-emerald-900 bg-white border border-emerald-300 px-2.5 py-1 rounded-lg">
-                      {modalKeystoneMultiple}x Keystoning
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">
-                        Minimum Order Quantity (MOQ per line) *
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        required
-                        value={formMoq}
-                        onChange={(e) => setFormMoq(parseInt(e.target.value, 10) || 1)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-slate-700 block mb-1">
-                        Initial Warehouse Units Available *
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        required
-                        value={formStockCount}
-                        onChange={(e) => setFormStockCount(parseInt(e.target.value, 10) || 0)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 4. Imagery with Instant Presets Library */}
-                <div className="space-y-3 pt-2">
-                  <h4 className="font-serif-luxury text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
-                    <span>4.</span> Jewelry Photography &amp; Visual Assets
-                  </h4>
-
-                  {/* 1-Click Image Presets */}
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-600 block mb-1.5">
-                      ✨ 1-Click Photo Presets (Click to instantly select high-res photography):
-                    </label>
-                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                      {IMAGE_PRESETS.map((preset, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => setFormPrimaryImage(preset.url)}
-                          className={`group relative aspect-square rounded-lg overflow-hidden border-2 transition ${
-                            formPrimaryImage === preset.url
-                              ? "border-amber-500 ring-2 ring-amber-400/40"
-                              : "border-slate-200 hover:border-slate-400"
-                          }`}
-                        >
-                          <Image
-                            src={preset.url}
-                            alt={preset.name}
-                            fill
-                            className="object-cover"
-                          />
-                          <span className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition flex items-end p-1 text-[8px] text-white font-bold leading-tight truncate">
-                            {preset.name}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-start">
-                    <div className="sm:col-span-2 space-y-3">
-                      <div>
-                        <label className="font-bold text-slate-700 block mb-1">
-                          Primary Product Image URL *
-                        </label>
-                        <input
-                          type="url"
-                          required
-                          value={formPrimaryImage}
-                          onChange={(e) => setFormPrimaryImage(e.target.value)}
-                          placeholder="https://images.unsplash.com/..."
-                          className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono text-[11px] focus:outline-none focus:border-slate-950"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="font-bold text-slate-700 block mb-1">
-                          Secondary Angle Image URL (Optional)
-                        </label>
-                        <input
-                          type="url"
-                          value={formSecondaryImage}
-                          onChange={(e) => setFormSecondaryImage(e.target.value)}
-                          placeholder="https://..."
-                          className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono text-[11px] focus:outline-none focus:border-slate-950"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
-                        Active Thumbnail
-                      </span>
-                      <div className="relative w-20 h-20 rounded-lg overflow-hidden mx-auto bg-slate-200 border border-slate-300">
-                        {formPrimaryImage ? (
-                          <Image
-                            src={formPrimaryImage}
-                            alt="Preview"
-                            fill
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs">
-                            No Image
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 5. Descriptions & SEO Keywords */}
-                <div className="space-y-3 pt-2">
-                  <h4 className="font-serif-luxury text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
-                    <span>5.</span> Wholesale Descriptions &amp; SEO Metadata
-                  </h4>
-
-                  <div>
-                    <label className="font-bold text-slate-700 block mb-1">
-                      Short Wholesale Summary (For line-sheets &amp; catalog grid) *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formShortDescription}
-                      onChange={(e) => setFormShortDescription(e.target.value)}
-                      placeholder="Ultra-fluid liquid silk drape. Crafted in solid 925 silver with mirror rhodium plating."
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-bold text-slate-700 block mb-1">
-                      Full Commercial Description (Craftsmanship, hallmarking &amp; packaging) *
-                    </label>
-                    <textarea
-                      rows={3}
-                      required
-                      value={formDescription}
-                      onChange={(e) => setFormDescription(e.target.value)}
-                      placeholder="Provide detailed technical trade copy for boutique buyers..."
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950 leading-relaxed"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-bold text-slate-700 block mb-1">
-                      SEO Keywords (Comma-separated for search ranking)
-                    </label>
-                    <input
-                      type="text"
-                      value={formSeoKeywords}
-                      onChange={(e) => setFormSeoKeywords(e.target.value)}
-                      placeholder="wholesale silver chains, 925 solid sterling silver bulk, UK silver jewelry supplier"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
-                    />
-                  </div>
-                </div>
-
-                {/* Modal Footer Controls */}
-                <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 flex-shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    className="bg-white border border-slate-300 text-slate-700 font-bold px-5 py-2.5 rounded-lg hover:bg-slate-100 transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-slate-950 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-lg shadow-sm transition uppercase tracking-wider text-xs"
-                  >
-                    {editingId ? "Save Changes →" : "Publish Wholesale Listing →"}
-                  </button>
-                </div>
-              </form>
-            </div>
           </div>
         )}
 
@@ -1690,5 +1015,13 @@ export default function AdminPortalPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AdminPortalPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FAF9F6] p-8 text-xs text-slate-500">Loading Merchant Portal...</div>}>
+      <AdminPortalContent />
+    </Suspense>
   );
 }
