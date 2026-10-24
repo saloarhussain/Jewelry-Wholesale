@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --silver-primary: #0F172A;
+    --silver-accent: #64748B;
+    --silver-light: #F8FAFC;
+    --gold-accent: #B4975A;
+  }
+
+  body {
+    background-color: #FDFDFD;
+    color: #1E293B;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Custom luxury fonts styling */
+  .font-serif-luxury {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    letter-spacing: -0.015em;
+  }
+
+  .font-sans-clean {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Shimmer animation for silver jewelry sheen */
+@keyframes silverShine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.silver-shimmer {
+  background: linear-gradient(90deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%);
+  background-size: 200% 100%;
+}
