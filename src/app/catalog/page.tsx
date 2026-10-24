@@ -80,10 +80,10 @@ function CatalogContent() {
         </div>
 
         {/* Search & Filter Toolbar */}
-        <div className="bg-white rounded-xl border border-slate-200/90 p-4 mb-8 shadow-sm space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+        <div className="bg-white rounded-xl border border-slate-200/90 p-3 sm:p-4 mb-8 shadow-sm space-y-3 sm:space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-3 items-center">
             {/* Search Input */}
-            <div className="md:col-span-5 relative">
+            <div className="sm:col-span-2 md:col-span-5 relative">
               <input
                 type="text"
                 placeholder="Search by name, SKU (e.g. AG-NECK), or keyword..."
@@ -105,9 +105,9 @@ function CatalogContent() {
             </div>
 
             {/* Finish Filter */}
-            <div className="md:col-span-4 flex items-center gap-2">
-              <span className="text-xs font-medium text-slate-500 whitespace-nowrap">Finish:</span>
-              <div className="flex gap-1 overflow-x-auto">
+            <div className="md:col-span-4 flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+              <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">Finish:</span>
+              <div className="flex gap-1 overflow-x-auto no-scrollbar">
                 {finishes.map((f) => (
                   <button
                     key={f}
@@ -125,12 +125,12 @@ function CatalogContent() {
             </div>
 
             {/* Sort Dropdown */}
-            <div className="md:col-span-3 flex items-center justify-end gap-2">
+            <div className="md:col-span-3 flex items-center justify-between sm:justify-end gap-2">
               <span className="text-xs font-medium text-slate-500">Sort:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as "featured" | "price-asc" | "price-desc" | "weight")}
-                className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-950 font-medium"
+                className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-950 font-medium w-full sm:w-auto"
               >
                 <option value="featured">Best Sellers</option>
                 <option value="price-asc">Wholesale Price: Low to High</option>
@@ -141,12 +141,12 @@ function CatalogContent() {
           </div>
 
           {/* Category Tabs */}
-          <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+          <div className="pt-2 border-t border-slate-100 flex gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:flex-wrap">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`text-xs px-3.5 py-1.5 rounded-lg transition font-medium ${
+                className={`text-xs px-3.5 py-1.5 rounded-lg transition font-medium whitespace-nowrap ${
                   category === cat
                     ? "bg-slate-950 text-white shadow-sm font-semibold"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200"

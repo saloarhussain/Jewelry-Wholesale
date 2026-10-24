@@ -112,16 +112,16 @@ export default function AdminPortalPage() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
             <button
               onClick={handleExportCSV}
-              className="bg-white border border-slate-300 hover:border-slate-950 text-slate-800 text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm transition flex items-center gap-1.5"
+              className="bg-white border border-slate-300 hover:border-slate-950 text-slate-800 text-xs font-bold px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-lg shadow-sm transition flex items-center gap-1.5"
             >
-              <span>📥</span> Export Orders (CSV / Excel)
+              <span>📥</span> Export Orders (CSV)
             </button>
             <Link
               href="/catalog"
-              className="bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm transition"
+              className="bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-lg shadow-sm transition"
             >
               Live Catalog →
             </Link>
@@ -135,7 +135,7 @@ export default function AdminPortalPage() {
         )}
 
         {/* Top Operational Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
               UK Wholesale Revenue

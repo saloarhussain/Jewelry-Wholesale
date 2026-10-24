@@ -65,33 +65,33 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Product Details */}
-        <div className="p-4 sm:p-5">
+        <div className="p-3.5 sm:p-5">
           <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
             <span className="font-mono text-[11px] tracking-wide text-slate-400">{product.sku}</span>
-            <span className="font-medium text-slate-600">{product.category}</span>
+            <span className="font-medium text-slate-600 text-[11px] sm:text-xs">{product.category}</span>
           </div>
 
-          <h3 className="font-serif-luxury text-base font-bold text-slate-900 line-clamp-2 hover:text-slate-700 transition leading-snug mb-2">
+          <h3 className="font-serif-luxury text-sm sm:text-base font-bold text-slate-900 line-clamp-2 hover:text-slate-700 transition leading-snug mb-2">
             <Link href={`/product/${product.id}`}>{product.name}</Link>
           </h3>
 
-          <p className="text-xs text-slate-500 line-clamp-2 mb-4 leading-relaxed">
+          <p className="text-xs text-slate-500 line-clamp-2 mb-3.5 leading-relaxed">
             {product.shortDescription}
           </p>
 
           {/* Pricing Grid */}
-          <div className="bg-slate-50 rounded-lg p-3 border border-slate-100 mb-4">
+          <div className="bg-slate-50 rounded-lg p-2.5 sm:p-3 border border-slate-100 mb-3 sm:mb-4">
             <div className="flex justify-between items-baseline mb-1">
               <div>
-                <span className="text-[11px] uppercase font-bold text-slate-400 block tracking-wider">
+                <span className="text-[10px] sm:text-[11px] uppercase font-bold text-slate-400 block tracking-wider">
                   Wholesale Unit
                 </span>
-                <span className="text-lg font-bold text-slate-950">
+                <span className="text-base sm:text-lg font-bold text-slate-950">
                   {formatPrice(product.priceGBP)}
                 </span>
               </div>
               <div className="text-right">
-                <span className="text-[11px] uppercase font-medium text-slate-400 block">
+                <span className="text-[10px] sm:text-[11px] uppercase font-medium text-slate-400 block">
                   Suggested MSRP
                 </span>
                 <span className="text-xs font-semibold text-slate-500 line-through">
@@ -101,7 +101,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
 
             {/* Micro Tier discounts summary */}
-            <div className="text-[11px] text-amber-800 font-medium pt-1.5 border-t border-slate-200/60 flex items-center justify-between">
+            <div className="text-[10px] sm:text-[11px] text-amber-800 font-medium pt-1 border-t border-slate-200/60 flex items-center justify-between">
               <span>Bulk tier:</span>
               <span>
                 {product.tierPricing[1]?.minQuantity}+ pcs (
@@ -113,23 +113,23 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Action / Add to Cart Section */}
-      <div className="px-4 sm:px-5 pb-5 pt-0">
+      <div className="px-3.5 sm:px-5 pb-4 sm:pb-5 pt-0">
         <div className="flex items-center gap-2">
           {/* Quantity Selector */}
-          <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-white">
+          <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-white flex-shrink-0">
             <button
               onClick={() => setQuantity((q) => Math.max(product.moq, q - 1))}
-              className="px-2.5 py-1.5 text-slate-600 hover:bg-slate-100 text-xs font-bold transition"
+              className="px-2 py-1.5 text-slate-600 hover:bg-slate-100 text-xs font-bold transition"
               title="Decrease quantity"
             >
               -
             </button>
-            <span className="px-2 py-1.5 text-xs font-semibold text-slate-900 min-w-[28px] text-center">
+            <span className="px-1.5 sm:px-2 py-1.5 text-xs font-semibold text-slate-900 min-w-[24px] sm:min-w-[28px] text-center">
               {quantity}
             </span>
             <button
               onClick={() => setQuantity((q) => q + 1)}
-              className="px-2.5 py-1.5 text-slate-600 hover:bg-slate-100 text-xs font-bold transition"
+              className="px-2 py-1.5 text-slate-600 hover:bg-slate-100 text-xs font-bold transition"
               title="Increase quantity"
             >
               +
@@ -139,7 +139,7 @@ export default function ProductCard({ product }: { product: Product }) {
           {/* Quick Add Button */}
           <button
             onClick={handleAdd}
-            className={`flex-1 text-xs font-bold py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 ${
+            className={`flex-1 text-[11px] sm:text-xs font-bold py-2 px-2 sm:px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-1 sm:gap-1.5 ${
               addedAnimation
                 ? "bg-emerald-700 text-white"
                 : "bg-slate-950 hover:bg-slate-800 text-white shadow-sm"
@@ -147,17 +147,17 @@ export default function ProductCard({ product }: { product: Product }) {
           >
             {addedAnimation ? (
               <>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Added ({quantity} pcs)</span>
+                <span className="truncate">Added ({quantity})</span>
               </>
             ) : (
               <>
-                <svg className="w-4 h-4 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <span>Add {quantity} to Bag</span>
+                <span className="truncate">Add {quantity} to Bag</span>
               </>
             )}
           </button>

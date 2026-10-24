@@ -238,32 +238,32 @@ export default function CheckoutPage() {
             </div>
 
             {/* 2. Destination & Shipping Address */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm space-y-4">
-              <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-                <h3 className="font-serif-luxury text-base font-bold text-slate-950 flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-mono">2</span>
+            <div className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row justify-between sm:items-center pb-3 border-b border-slate-100 gap-2.5">
+                <h3 className="font-serif-luxury text-sm sm:text-base font-bold text-slate-950 flex items-center gap-2">
+                  <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-900 text-white text-[11px] sm:text-xs flex items-center justify-center font-mono flex-shrink-0">2</span>
                   <span>Destination &amp; Commercial Delivery</span>
                 </h3>
 
                 {/* Country Radio Switcher */}
-                <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+                <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-100 p-1 rounded-lg text-xs font-semibold self-start sm:self-auto w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={() => setCountry("UK")}
-                    className={`px-2.5 py-1 rounded transition ${
+                    className={`flex-1 sm:flex-initial px-2.5 py-1 rounded transition text-center ${
                       country === "UK" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
                     }`}
                   >
-                    🇬🇧 United Kingdom
+                    🇬🇧 UK
                   </button>
                   <button
                     type="button"
                     onClick={() => setCountry("USA")}
-                    className={`px-2.5 py-1 rounded transition ${
+                    className={`flex-1 sm:flex-initial px-2.5 py-1 rounded transition text-center ${
                       country === "USA" ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
                     }`}
                   >
-                    🇺🇸 United States
+                    🇺🇸 USA
                   </button>
                 </div>
               </div>

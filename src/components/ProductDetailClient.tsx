@@ -166,7 +166,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
                   <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-2">
                     Wholesale Volume Tier Discounts:
                   </span>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                     {product.tierPricing.map((tier, idx) => {
                       const tierPrice = wholesaleUnitPrice * (1 - tier.discountPercentage / 100);
                       const isSelected = quantity >= tier.minQuantity && (!product.tierPricing[idx + 1] || quantity < product.tierPricing[idx + 1].minQuantity);
@@ -197,10 +197,10 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
 
               {/* Order Quantity & Add to Cart Controls */}
               <div className="space-y-3 pt-2">
-                <div className="flex items-center gap-4">
-                  <div className="flex flex-col">
-                    <span className="text-xs text-slate-500 font-medium mb-1">
-                      Pack Quantity (MOQ: {product.moq}):
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                  <div className="flex items-center justify-between sm:flex-col sm:items-start">
+                    <span className="text-xs text-slate-500 font-medium mb-0 sm:mb-1">
+                      Pack MOQ: {product.moq} pcs
                     </span>
                     <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-white">
                       <button
@@ -226,9 +226,12 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
                   </div>
 
                   <div className="flex-1 flex flex-col justify-end">
-                    <span className="text-xs text-slate-500 font-medium mb-1 text-right">
-                      Line Total: <strong className="text-slate-950 font-bold">{currency === "USD" ? `$${lineSubtotal.toFixed(2)}` : `£${lineSubtotal.toFixed(2)}`}</strong>
-                    </span>
+                    <div className="flex justify-between items-center sm:block text-xs text-slate-500 font-medium mb-1.5 sm:text-right">
+                      <span>Subtotal:</span>
+                      <strong className="text-slate-950 font-bold text-sm ml-1">
+                        {currency === "USD" ? `$${lineSubtotal.toFixed(2)}` : `£${lineSubtotal.toFixed(2)}`}
+                      </strong>
+                    </div>
                     <button
                       onClick={handleAddToCart}
                       className={`w-full py-3.5 px-6 rounded-lg text-xs uppercase font-bold tracking-wider transition-all duration-200 flex items-center justify-center gap-2 ${

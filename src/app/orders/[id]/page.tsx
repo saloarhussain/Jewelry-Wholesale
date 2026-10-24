@@ -104,13 +104,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          {/* Timeline */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {/* Timeline - Smooth horizontal scroll on mobile, 5 cols on desktop */}
+          <div className="flex md:grid md:grid-cols-5 gap-3 sm:gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0">
             {steps.map((st, i) => (
-              <div key={i} className="flex flex-col">
+              <div key={i} className="flex flex-col flex-shrink-0 w-32 sm:w-36 md:w-auto">
                 <div className="flex items-center gap-2 mb-2">
                   <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                       st.active ? "bg-slate-950 text-white" : "bg-slate-200 text-slate-400"
                     }`}
                   >
@@ -118,7 +118,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   </div>
                   <div className={`h-1 flex-1 rounded ${st.active ? "bg-slate-950" : "bg-slate-200"}`} />
                 </div>
-                <div className="font-bold text-xs text-slate-900">{st.title}</div>
+                <div className="font-bold text-xs text-slate-900 truncate">{st.title}</div>
                 <div className="text-[11px] text-slate-500 line-clamp-1">{st.desc}</div>
               </div>
             ))}

@@ -60,56 +60,56 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Copy */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 bg-slate-900 border border-slate-700/80 px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>UK &amp; USA Trade Sourcing • Certified 925 Solid Silver</span>
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6">
+              <div className="inline-flex items-center gap-2 bg-slate-900 border border-slate-700/80 px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold text-slate-300 max-w-full">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+                <span className="truncate">UK &amp; USA Trade Sourcing • Certified 925 Solid Silver</span>
               </div>
 
-              <h1 className="font-serif-luxury text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-white">
-                Direct-From-Manufacturer <br />
+              <h1 className="font-serif-luxury text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-white">
+                Direct-From-Manufacturer <br className="hidden sm:inline" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-slate-300 to-amber-200">
                   Solid 925 Silver Wholesale.
                 </span>
               </h1>
 
-              <p className="text-slate-300 text-base sm:text-lg max-w-2xl font-light leading-relaxed">
+              <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl font-light leading-relaxed">
                 Empowering independent UK &amp; US jewelry boutiques, luxury department stores, and online retailers with factory-direct pricing, certified UK Assay Hallmarks, and an accessible <strong className="text-white font-bold underline underline-offset-4 decoration-amber-400">{minimumOrderFormatted} minimum order</strong>.
               </p>
 
               {/* Key Bullet Highlights */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 text-xs font-medium text-slate-300">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 pt-1 sm:pt-2 text-xs font-medium text-slate-300">
                 <div className="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-amber-400 text-sm font-bold">✓</span>
+                  <span className="text-amber-400 text-sm font-bold flex-shrink-0">✓</span>
                   <span>MOQ: {minimumOrderFormatted} Only</span>
                 </div>
                 <div className="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-amber-400 text-sm font-bold">✓</span>
+                  <span className="text-amber-400 text-sm font-bold flex-shrink-0">✓</span>
                   <span>UK Assay Hallmarked</span>
                 </div>
                 <div className="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-amber-400 text-sm font-bold">✓</span>
+                  <span className="text-amber-400 text-sm font-bold flex-shrink-0">✓</span>
                   <span>US DDP Customs Paid</span>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-4 flex flex-wrap items-center gap-4">
+              <div className="pt-2 sm:pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 <Link
                   href="/catalog"
-                  className="bg-white hover:bg-slate-100 text-slate-950 font-bold px-7 py-3.5 rounded-lg transition shadow-lg flex items-center gap-2 text-sm"
+                  className="bg-white hover:bg-slate-100 text-slate-950 font-bold px-6 py-3.5 rounded-lg transition shadow-lg flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider"
                 >
                   <span>Browse Wholesale Catalog</span>
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </Link>
 
                 <Link
                   href="/margin-calculator"
-                  className="bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-semibold px-6 py-3.5 rounded-lg border border-slate-700 transition text-sm flex items-center gap-2"
+                  className="bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-semibold px-6 py-3.5 rounded-lg border border-slate-700 transition text-xs sm:text-sm flex items-center justify-center gap-2"
                 >
-                  <svg className="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
                   <span>Calculate Retail Margins</span>
@@ -239,14 +239,14 @@ export default function HomePage() {
             </div>
 
             {/* Category Filter Pills */}
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:flex-wrap">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`text-xs px-3.5 py-1.5 rounded-full transition font-medium ${
+                  className={`text-xs px-3.5 py-1.5 rounded-full transition font-medium whitespace-nowrap ${
                     selectedCategory === cat
-                      ? "bg-slate-950 text-white shadow-sm"
+                      ? "bg-slate-950 text-white shadow-sm font-semibold"
                       : "bg-white text-slate-600 border border-slate-200 hover:border-slate-400"
                   }`}
                 >

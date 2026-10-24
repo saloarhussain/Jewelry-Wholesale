@@ -41,6 +41,15 @@
   background: #94a3b8;
 }
 
+/* Hide scrollbars for touch scroll areas */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Shimmer animation for silver jewelry sheen */
 @keyframes silverShine {
   0% { background-position: -200% 0; }
