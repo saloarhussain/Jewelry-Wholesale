@@ -186,10 +186,10 @@ export default function AdminPortalPage() {
         </div>
 
         {/* Tab Controls */}
-        <div className="flex border-b border-slate-200 mb-6 gap-2">
+        <div className="flex border-b border-slate-200 mb-6 gap-2 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab("orders")}
-            className={`py-2 px-4 text-xs font-bold uppercase tracking-wider border-b-2 transition ${
+            className={`py-2 px-4 text-xs font-bold uppercase tracking-wider border-b-2 transition whitespace-nowrap ${
               activeTab === "orders"
                 ? "border-slate-950 text-slate-950"
                 : "border-transparent text-slate-400 hover:text-slate-700"
@@ -199,7 +199,7 @@ export default function AdminPortalPage() {
           </button>
           <button
             onClick={() => setActiveTab("catalog")}
-            className={`py-2 px-4 text-xs font-bold uppercase tracking-wider border-b-2 transition ${
+            className={`py-2 px-4 text-xs font-bold uppercase tracking-wider border-b-2 transition whitespace-nowrap ${
               activeTab === "catalog"
                 ? "border-slate-950 text-slate-950"
                 : "border-transparent text-slate-400 hover:text-slate-700"
@@ -213,30 +213,120 @@ export default function AdminPortalPage() {
         {activeTab === "orders" && (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Filter Country:</span>
-                <div className="flex gap-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Filter Region:</span>
+                <div className="flex gap-1.5">
                   {(["All", "UK", "USA"] as const).map((c) => (
                     <button
                       key={c}
                       onClick={() => setFilterCountry(c)}
-                      className={`text-xs px-2.5 py-1 rounded transition ${
+                      className={`text-xs px-2.5 py-1 rounded transition font-semibold ${
                         filterCountry === c
                           ? "bg-slate-950 text-white font-bold"
-                          : "bg-white text-slate-600 border border-slate-200"
+                          : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300"
                       }`}
                     >
-                      {c === "UK" ? "🇬🇧 UK" : c === "USA" ? "🇺🇸 USA" : "All"}
+                      {c === "UK" ? "🇬🇧 UK" : c === "USA" ? "🇺🇸 USA" : "All Regions"}
                     </button>
                   ))}
                 </div>
               </div>
-              <span className="text-xs text-slate-500">
-                Click any status dropdown to trigger live status progression
+              <span className="text-[11px] text-slate-500">
+                Update status or consignments to sync with retailer tracking
               </span>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* MOBILE VIEW (< md): Card List for Phones & Small Tablets */}
+            <div className="block md:hidden divide-y divide-slate-100">
+              {filteredOrders.map((ord) => (
+                <div key={ord.id} className="p-4 space-y-3.5 hover:bg-slate-50/50 transition">
+                  {/* Top: Order Ref, Date, Country Badge & Total */}
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <span className="font-mono font-extrabold text-sm text-slate-950 block">
+                        {ord.orderNumber}
+                      </span>
+                      <span className="text-[11px] text-slate-500">
+                        {new Date(ord.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <span className="bg-slate-100 border border-slate-200 text-slate-700 px-2 py-0.5 rounded text-[10px] font-bold">
+                        {ord.country === "UK" ? "🇬🇧 UK" : "🇺🇸 USA"}
+                      </span>
+                      <span className="text-xs font-black text-slate-950 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded">
+                        {ord.currency === "USD" ? `$${ord.total.toFixed(2)}` : `£${ord.total.toFixed(2)}`}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Middle: Retailer Info */}
+                  <div className="bg-slate-50 rounded-xl p-3 border border-slate-100 text-xs space-y-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Retailer / Buyer</span>
+                        <span className="font-bold text-slate-900 block">{ord.companyName}</span>
+                        <span className="text-slate-500 text-[11px]">{ord.buyerName} • Tax ID: {ord.vatTaxId}</span>
+                      </div>
+                      <span className="text-[11px] text-slate-500 font-medium">
+                        {ord.items.reduce((s, it) => s + it.quantity, 0)} units
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Controls: Live Status & Tracking on Phone */}
+                  <div className="grid grid-cols-1 gap-2.5 pt-1">
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                        Dispatch Progression Status
+                      </label>
+                      <select
+                        value={ord.status}
+                        onChange={(e) => handleUpdateStatus(ord.id, e.target.value as any)}
+                        className={`w-full text-xs font-bold px-3 py-2 rounded-lg border focus:outline-none transition ${
+                          ord.status === "Delivered"
+                            ? "bg-slate-950 text-white border-slate-950"
+                            : ord.status === "Dispatched"
+                            ? "bg-emerald-100 text-emerald-900 border-emerald-300"
+                            : "bg-amber-100 text-amber-900 border-amber-300"
+                        }`}
+                      >
+                        <option value="Pending Review">Pending Review</option>
+                        <option value="Payment Confirmed">Payment Confirmed</option>
+                        <option value="Assay Hallmarking">Assay Hallmarking</option>
+                        <option value="Dispatched">Dispatched (In Transit)</option>
+                        <option value="Delivered">Delivered</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                        Courier Consignment ({ord.trackingCarrier})
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={ord.trackingNumber || ""}
+                        placeholder="Assign tracking number..."
+                        onBlur={(e) => handleUpdateTracking(ord.id, e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-950"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Action: View Invoice */}
+                  <Link
+                    href={`/orders/${ord.id}`}
+                    className="w-full bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-bold text-xs uppercase tracking-wider py-2.5 rounded-lg flex items-center justify-center gap-1.5 transition shadow-xs text-center"
+                  >
+                    <span>View Commercial Invoice</span>
+                    <span>→</span>
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            {/* DESKTOP VIEW (>= md): Full Detailed Tabular View */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-100 text-slate-700 uppercase tracking-wider font-semibold border-b border-slate-200">
                   <tr>
@@ -325,14 +415,61 @@ export default function AdminPortalPage() {
         {/* Tab 2: Catalog & Stock Inventory */}
         {activeTab === "catalog" && (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+            <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <h2 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                 Solid 925 Product Stock &amp; Factory Batch Controls
               </h2>
               <span className="text-xs text-slate-500">{products.length} Active Silver Articles</span>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* MOBILE VIEW (< md): Inventory Card List */}
+            <div className="block md:hidden divide-y divide-slate-100">
+              {products.map((p) => (
+                <div key={p.id} className="p-4 space-y-3 hover:bg-slate-50/50 transition">
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <span className="font-bold text-sm text-slate-900 block">{p.name}</span>
+                      <span className="text-[11px] font-mono text-slate-400">{p.sku} • {p.category}</span>
+                    </div>
+                    <span className="font-bold text-xs text-slate-950 bg-slate-100 px-2.5 py-1 rounded-full flex-shrink-0">
+                      {p.stockCount} in stock
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-50 rounded-xl p-2.5 border border-slate-100 flex items-center justify-between text-xs">
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Fineness &amp; Weight</span>
+                      <span className="font-medium text-slate-800">{p.gramWeight} Solid 925</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Wholesale Price</span>
+                      <span className="font-bold text-slate-900">£{p.priceGBP.toFixed(2)} / ${p.priceUSD.toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Fast Restock:</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleRestock(p.id, 50)}
+                        className="bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-xs"
+                      >
+                        +50
+                      </button>
+                      <button
+                        onClick={() => handleRestock(p.id, 100)}
+                        className="bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition shadow-xs"
+                      >
+                        +100
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* DESKTOP VIEW (>= md): Inventory Tabular Table */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-100 text-slate-700 uppercase tracking-wider font-semibold border-b border-slate-200">
                   <tr>

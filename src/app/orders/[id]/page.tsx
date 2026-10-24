@@ -70,16 +70,16 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </h1>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
             <button
               onClick={handlePrint}
-              className="bg-white border border-slate-300 hover:border-slate-950 text-slate-800 font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm transition flex items-center gap-2"
+              className="bg-white border border-slate-300 hover:border-slate-950 text-slate-800 font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm transition flex items-center justify-center gap-2"
             >
-              <span>🖨️</span> Print Commercial Invoice &amp; Packing Slip
+              <span>🖨️</span> Print Invoice &amp; Slip
             </button>
             <Link
               href="/catalog"
-              className="bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm transition"
+              className="bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm transition text-center"
             >
               Back to Catalog
             </Link>
@@ -196,8 +196,29 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          {/* Items Table */}
-          <div className="overflow-x-auto">
+          {/* Items Section - Mobile Card List */}
+          <div className="block sm:hidden print:hidden divide-y divide-slate-100 border-y border-slate-200">
+            {order.items.map((it, idx) => (
+              <div key={idx} className="py-3 space-y-1.5 text-xs">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="font-bold text-slate-900 block">{it.name}</span>
+                    <span className="text-[11px] font-mono text-slate-400">{it.sku} • Solid 925 Hallmarked</span>
+                  </div>
+                  <span className="font-bold text-slate-950 text-right">
+                    {order.currency === "USD" ? `$${it.lineTotal.toFixed(2)}` : `£${it.lineTotal.toFixed(2)}`}
+                  </span>
+                </div>
+                <div className="flex justify-between text-[11px] text-slate-500">
+                  <span>Quantity: <strong className="text-slate-800">{it.quantity} pcs</strong></span>
+                  <span>Unit: {order.currency === "USD" ? `$${it.unitPrice.toFixed(2)}` : `£${it.unitPrice.toFixed(2)}`}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Items Table - Desktop & Print Official View */}
+          <div className="hidden sm:block print:block overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-slate-100 text-slate-700 uppercase tracking-wider font-semibold border-y border-slate-200">
                 <tr>
