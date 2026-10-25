@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Product, CATEGORIES } from "@/data/products";
 import { useProducts } from "@/components/ProductContext";
+import { uploadProductImage } from "@/lib/supabaseStorage";
+import { Upload, Trash2, CheckCircle2, Loader2, Star, Plus, Image as ImageIcon } from "lucide-react";
 
 // Curated high-res jewelry photography presets for instant 1-click selection
 const IMAGE_PRESETS = [
@@ -82,8 +84,11 @@ function NewProductContent() {
   const [formSuggestedRetailUSD, setFormSuggestedRetailUSD] = useState<number>(76.00);
   const [formMoq, setFormMoq] = useState<number>(3);
   const [formStockCount, setFormStockCount] = useState<number>(120);
-  const [formPrimaryImage, setFormPrimaryImage] = useState(IMAGE_PRESETS[0].url);
-  const [formSecondaryImage, setFormSecondaryImage] = useState("");
+  const [productImages, setProductImages] = useState<string[]>([IMAGE_PRESETS[0].url]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+  const [showPresets, setShowPresets] = useState(false);
   const [formShortDescription, setFormShortDescription] = useState(
     "Ultra-fluid liquid silk drape. Crafted in solid 925 silver with mirror rhodium anti-tarnish protective plating."
   );
@@ -113,8 +118,11 @@ function NewProductContent() {
         setFormSuggestedRetailUSD(existing.suggestedRetailUSD);
         setFormMoq(existing.moq);
         setFormStockCount(existing.stockCount);
-        setFormPrimaryImage(existing.images[0] || IMAGE_PRESETS[0].url);
-        setFormSecondaryImage(existing.images[1] || "");
+        if (existing.images && existing.images.length > 0) {
+          setProductImages(existing.images);
+        } else {
+          setProductImages([IMAGE_PRESETS[0].url]);
+        }
         setFormShortDescription(existing.shortDescription);
         setFormDescription(existing.description);
         setFormSeoKeywords(existing.seoKeywords ? existing.seoKeywords.join(", ") : "");
@@ -133,6 +141,53 @@ function NewProductContent() {
     setFormSuggestedRetailUSD(msrpUSD);
   };
 
+  // Handle file uploads to Supabase Storage
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setIsUploading(true);
+    setUploadError("");
+
+    const newUrls: string[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (!file.type.startsWith("image/")) {
+        setUploadError("Please upload valid image files (JPG, PNG, WEBP, AVIF).");
+        continue;
+      }
+      try {
+        const url = await uploadProductImage(file);
+        if (url) {
+          newUrls.push(url);
+        }
+      } catch (err: any) {
+        setUploadError(`Failed to upload ${file.name}: ${err.message || "error"}`);
+      }
+    }
+
+    if (newUrls.length > 0) {
+      setProductImages((prev) => [...prev, ...newUrls]);
+    }
+    setIsUploading(false);
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    setProductImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleSetPrimary = (indexToPrimary: number) => {
+    setProductImages((prev) => {
+      const target = prev[indexToPrimary];
+      const rest = prev.filter((_, idx) => idx !== indexToPrimary);
+      return [target, ...rest];
+    });
+  };
+
+  const handleAddPreset = (url: string) => {
+    if (!productImages.includes(url)) {
+      setProductImages((prev) => [...prev, url]);
+    }
+  };
+
   // Submit Handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,9 +204,11 @@ function NewProductContent() {
       return;
     }
 
-    const imagesArray = [formPrimaryImage.trim()];
-    if (formSecondaryImage.trim()) {
-      imagesArray.push(formSecondaryImage.trim());
+    const imagesArray = productImages.filter((u) => Boolean(u && u.trim()));
+    if (imagesArray.length === 0) {
+      alert("Please upload at least one product photo.");
+      setIsSubmitting(false);
+      return;
     }
 
     const keywordsArray = formSeoKeywords
@@ -480,96 +537,183 @@ function NewProductContent() {
               </div>
             </div>
 
-            {/* Card 3: Jewelry Photography & 1-Click Presets */}
+            {/* Card 3: Jewelry Photography & Supabase Image Upload */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
               <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                <h2 className="font-serif-luxury text-base font-bold text-slate-950 flex items-center gap-2">
+                <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-mono font-bold">3</span>
                   <span>Jewelry Photography &amp; Visual Media</span>
                 </h2>
-                <span className="text-[11px] text-slate-400 font-medium">High-Res Assets</span>
+                <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold border border-emerald-200 inline-flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Supabase Storage Linked
+                </span>
               </div>
 
-              {/* 1-Click Preset Gallery */}
+              {/* Drag & Drop File Upload Zone */}
               <div>
-                <label className="text-xs font-bold text-slate-800 block mb-2">
-                  ✨ 1-Click Photo Presets (Click any thumbnail to auto-fill primary photo):
-                </label>
-                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                  {IMAGE_PRESETS.map((preset, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setFormPrimaryImage(preset.url)}
-                      className={`group relative aspect-square rounded-xl overflow-hidden border-2 transition ${
-                        formPrimaryImage === preset.url
-                          ? "border-amber-500 ring-2 ring-amber-400/40"
-                          : "border-slate-200 hover:border-slate-400"
-                      }`}
-                    >
-                      <Image
-                        src={preset.url}
-                        alt={preset.name}
-                        fill
-                        className="object-cover"
-                      />
-                      <span className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition flex items-end p-1 text-[8px] text-white font-bold leading-tight truncate">
-                        {preset.name}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+                <label
+                  htmlFor="product-photo-upload"
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDragging(false);
+                    handleFileUpload(e.dataTransfer.files);
+                  }}
+                  className={`border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer transition flex flex-col items-center justify-center gap-3 ${
+                    isDragging
+                      ? "border-slate-900 bg-slate-100/80 ring-2 ring-slate-900/10"
+                      : "border-slate-300 hover:border-slate-700 bg-slate-50/50 hover:bg-slate-50"
+                  }`}
+                >
+                  <input
+                    id="product-photo-upload"
+                    type="file"
+                    multiple
+                    accept="image/png,image/jpeg,image/webp,image/avif"
+                    className="hidden"
+                    onChange={(e) => handleFileUpload(e.target.files)}
+                  />
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start text-xs pt-2">
-                <div className="sm:col-span-2 space-y-3">
-                  <div>
-                    <label className="font-bold text-slate-800 block mb-1">
-                      Primary Product Image URL *
-                    </label>
-                    <input
-                      type="url"
-                      required
-                      value={formPrimaryImage}
-                      onChange={(e) => setFormPrimaryImage(e.target.value)}
-                      placeholder="https://images.unsplash.com/..."
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono text-[11px] focus:outline-none focus:border-slate-950"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-bold text-slate-800 block mb-1">
-                      Secondary Image URL (Alternative Angle / Model Shot)
-                    </label>
-                    <input
-                      type="url"
-                      value={formSecondaryImage}
-                      onChange={(e) => setFormSecondaryImage(e.target.value)}
-                      placeholder="https://..."
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono text-[11px] focus:outline-none focus:border-slate-950"
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1.5">
-                    Live Photo Preview
-                  </span>
-                  <div className="relative w-24 h-24 rounded-lg overflow-hidden mx-auto bg-slate-200 border border-slate-300 shadow-xs">
-                    {formPrimaryImage ? (
-                      <Image
-                        src={formPrimaryImage}
-                        alt="Product Preview"
-                        fill
-                        className="object-cover"
-                      />
+                  <div className="w-12 h-12 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-700">
+                    {isUploading ? (
+                      <Loader2 className="w-6 h-6 animate-spin text-slate-900" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs">
-                        No Image
-                      </div>
+                      <Upload className="w-6 h-6" />
                     )}
                   </div>
+
+                  <div>
+                    <p className="text-xs sm:text-sm font-semibold text-slate-900">
+                      {isUploading
+                        ? "Uploading photo to Supabase database..."
+                        : "Click to browse or drag & drop high-res jewelry photos"}
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-1">
+                      Directly stored in your Supabase Storage bucket &bull; PNG, JPG, WEBP, AVIF up to 10MB
+                    </p>
+                  </div>
+
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white shadow-xs hover:bg-slate-800 transition">
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Select Images from Computer</span>
+                  </span>
+                </label>
+
+                {uploadError && (
+                  <p className="text-xs text-rose-600 mt-2 font-medium">{uploadError}</p>
+                )}
+              </div>
+
+              {/* Uploaded Photos Gallery */}
+              {productImages.length > 0 && (
+                <div className="pt-2">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5 text-slate-500" />
+                      Attached Product Images ({productImages.length})
+                    </span>
+                    <span className="text-[11px] text-slate-500">
+                      First photo is the primary catalog thumbnail
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                    {productImages.map((imgUrl, idx) => (
+                      <div
+                        key={idx}
+                        className={`group relative aspect-square rounded-xl overflow-hidden border-2 transition bg-slate-100 ${
+                          idx === 0
+                            ? "border-amber-500 shadow-sm ring-2 ring-amber-400/20"
+                            : "border-slate-200 hover:border-slate-400"
+                        }`}
+                      >
+                        <Image
+                          src={imgUrl}
+                          alt={`Product Image ${idx + 1}`}
+                          fill
+                          className="object-cover"
+                          unoptimized={imgUrl.startsWith("data:")}
+                        />
+
+                        {/* Primary Badge */}
+                        {idx === 0 && (
+                          <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                            <Star className="w-2.5 h-2.5 fill-slate-950" /> Primary
+                          </span>
+                        )}
+
+                        {/* Overlay Controls */}
+                        <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-2">
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(idx)}
+                              title="Delete photo"
+                              className="p-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          {idx !== 0 && (
+                            <button
+                              type="button"
+                              onClick={() => handleSetPrimary(idx)}
+                              className="w-full py-1 px-1.5 rounded bg-white/90 hover:bg-white text-slate-900 font-semibold text-[10px] shadow-xs transition"
+                            >
+                              Set as Primary
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              )}
+
+              {/* Optional Studio Presets Toggle */}
+              <div className="pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowPresets(!showPresets)}
+                  className="text-xs text-slate-500 hover:text-slate-900 font-medium inline-flex items-center gap-1 transition"
+                >
+                  <span>{showPresets ? "Hide" : "Show"} jewelry studio preset library</span>
+                  <span className="text-[10px]">{showPresets ? "▲" : "▼"}</span>
+                </button>
+
+                {showPresets && (
+                  <div className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <p className="text-[11px] text-slate-500 mb-2">
+                      Click any sample to attach it to this product listing:
+                    </p>
+                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                      {IMAGE_PRESETS.map((preset, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => handleAddPreset(preset.url)}
+                          className="group relative aspect-square rounded-lg overflow-hidden border border-slate-200 hover:border-slate-800 transition"
+                        >
+                          <Image
+                            src={preset.url}
+                            alt={preset.name}
+                            fill
+                            className="object-cover"
+                          />
+                          <span className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition flex items-end p-1 text-[8px] text-white font-bold leading-tight truncate">
+                            + {preset.name}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

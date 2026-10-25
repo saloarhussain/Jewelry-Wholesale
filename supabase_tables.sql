@@ -118,3 +118,23 @@ CREATE POLICY "Allow public access for profiles"
   ON public.profiles FOR ALL
   USING (true)
   WITH CHECK (true);
+
+-- 4. STORAGE BUCKET FOR PRODUCT PHOTOS
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('product-images', 'product-images', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+DROP POLICY IF EXISTS "Public Access" ON storage.objects;
+CREATE POLICY "Public Access" 
+  ON storage.objects FOR SELECT 
+  USING (bucket_id = 'product-images');
+
+DROP POLICY IF EXISTS "Allow Uploads" ON storage.objects;
+CREATE POLICY "Allow Uploads" 
+  ON storage.objects FOR INSERT 
+  WITH CHECK (bucket_id = 'product-images');
+
+DROP POLICY IF EXISTS "Allow Updates" ON storage.objects;
+CREATE POLICY "Allow Updates" 
+  ON storage.objects FOR UPDATE 
+  USING (bucket_id = 'product-images');
