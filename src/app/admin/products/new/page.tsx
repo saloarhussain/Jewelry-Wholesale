@@ -248,10 +248,10 @@ function NewProductContent() {
                 {isEditing ? "Edit Wholesale Listing" : "Add New Product"}
               </span>
             </nav>
-            <h1 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-slate-950">
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
               {isEditing ? `Edit Listing: ${formName || "Product"}` : "Add New Wholesale Silver Listing"}
             </h1>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-sm text-slate-500 mt-1.5 leading-relaxed">
               Add new solid 925 sterling silver jewelry lines to your UK &amp; US wholesale line-sheet and live catalog.
             </p>
           </div>
