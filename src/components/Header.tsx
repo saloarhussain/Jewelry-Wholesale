@@ -96,47 +96,47 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Brand Logo - Responsive & Non-overflowing */}
-            <div className="flex-1 lg:flex-initial min-w-0 pr-2">
+            {/* Brand Logo - Always Crisp, Never Truncated */}
+            <div className="shrink-0 flex items-center pr-3 xl:pr-6">
               <Link href="/" className="group flex flex-col">
-                <span className="font-serif-luxury text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-wider sm:tracking-widest text-slate-950 group-hover:text-slate-700 transition truncate">
+                <span className="text-xl sm:text-2xl lg:text-[26px] font-extrabold tracking-wider sm:tracking-widest text-slate-950 group-hover:text-slate-700 transition whitespace-nowrap leading-tight">
                   ARGENT &amp; CO.
                 </span>
-                <span className="text-[8px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.25em] text-slate-500 uppercase font-medium truncate">
-                  Fine 925 Silver Wholesale • UK &amp; USA
+                <span className="text-[8px] sm:text-[9.5px] tracking-[0.16em] sm:tracking-[0.22em] text-slate-500 uppercase font-medium whitespace-nowrap">
+                  Fine 925 Silver Wholesale
                 </span>
               </Link>
             </div>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-7 text-xs xl:text-sm font-medium text-slate-700 whitespace-nowrap">
+            <nav className="hidden lg:flex items-center gap-3 xl:gap-5 2xl:gap-6 text-xs xl:text-[13px] font-medium text-slate-700 whitespace-nowrap">
               <Link
                 href="/catalog"
-                className={`transition hover:text-slate-950 ${
-                  pathname === "/catalog" ? "text-slate-950 font-bold border-b-2 border-slate-950 pb-0.5" : ""
+                className={`transition hover:text-slate-950 py-1 ${
+                  pathname === "/catalog" ? "text-slate-950 font-bold border-b-2 border-slate-950" : ""
                 }`}
               >
                 Wholesale Catalog
               </Link>
               <Link
                 href="/hallmarking"
-                className={`transition hover:text-slate-950 ${
-                  pathname === "/hallmarking" ? "text-slate-950 font-bold border-b-2 border-slate-950 pb-0.5" : ""
+                className={`transition hover:text-slate-950 py-1 ${
+                  pathname === "/hallmarking" ? "text-slate-950 font-bold border-b-2 border-slate-950" : ""
                 }`}
               >
                 Assay Hallmarking
               </Link>
               <Link
                 href="/margin-calculator"
-                className={`transition hover:text-slate-950 ${
-                  pathname === "/margin-calculator" ? "text-slate-950 font-bold border-b-2 border-slate-950 pb-0.5" : ""
+                className={`transition hover:text-slate-950 py-1 ${
+                  pathname === "/margin-calculator" ? "text-slate-950 font-bold border-b-2 border-slate-950" : ""
                 }`}
               >
                 Profit Calculator
               </Link>
               <Link
                 href="/guides/uk-retailers"
-                className={`transition hover:text-slate-950 flex items-center gap-1 ${
+                className={`transition hover:text-slate-950 flex items-center gap-1 py-1 ${
                   pathname === "/guides/uk-retailers" ? "text-slate-950 font-bold" : ""
                 }`}
               >
@@ -144,7 +144,7 @@ export default function Header() {
               </Link>
               <Link
                 href="/guides/usa-retailers"
-                className={`transition hover:text-slate-950 flex items-center gap-1 ${
+                className={`transition hover:text-slate-950 flex items-center gap-1 py-1 ${
                   pathname === "/guides/usa-retailers" ? "text-slate-950 font-bold" : ""
                 }`}
               >
@@ -152,36 +152,47 @@ export default function Header() {
               </Link>
               <Link
                 href="/admin"
-                className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold px-2.5 py-1 rounded border border-slate-300 transition"
+                className="text-[11px] xl:text-xs bg-slate-900 hover:bg-slate-800 text-white font-medium px-2.5 py-1.5 rounded-lg shadow-xs transition inline-flex items-center gap-1.5"
               >
-                Merchant Admin
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Admin</span>
               </Link>
             </nav>
 
-            {/* Right Side Actions - Always visible and aligned on mobile */}
-            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+            {/* Right Side Actions */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               {/* Account State (Desktop) */}
               {user ? (
-                <div className="hidden sm:flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-1.5">
                   <Link
                     href="/account"
-                    className="flex flex-col text-right text-xs hover:opacity-80 transition"
+                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-slate-50/80 hover:bg-slate-100 transition text-xs"
+                    title={`Account: ${user.companyName} (${user.tier})`}
                   >
-                    <span className="font-semibold text-slate-900 truncate max-w-[120px] lg:max-w-[150px]">{user.companyName}</span>
-                    <span className="text-amber-700 font-medium text-[10px]">{user.tier}</span>
+                    <div className="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[10px]">
+                      {user.companyName.charAt(0)}
+                    </div>
+                    <div className="flex flex-col text-left leading-tight">
+                      <span className="font-semibold text-slate-900 text-[11px] truncate max-w-[90px] xl:max-w-[120px]">
+                        {user.companyName}
+                      </span>
+                      <span className="text-amber-700 font-medium text-[9px]">{user.tier.replace(" Partner", "")}</span>
+                    </div>
                   </Link>
                   <button
                     onClick={logout}
-                    className="text-slate-400 hover:text-slate-700 text-xs border border-slate-200 rounded px-2 py-1"
+                    className="text-slate-400 hover:text-slate-700 p-1.5 hover:bg-slate-100 rounded-md transition"
                     title="Sign Out"
                   >
-                    Exit
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
                   </button>
                 </div>
               ) : (
                 <Link
                   href="/account/login"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-900 border border-slate-300 hover:border-slate-900 px-3 py-2 rounded transition"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-900 border border-slate-300 hover:border-slate-900 px-3 py-2 rounded-lg transition"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -193,15 +204,15 @@ export default function Header() {
               {/* Cart Button - Sized for mobile and desktop */}
               <Link
                 href="/cart"
-                className="relative inline-flex items-center gap-1.5 sm:gap-2 bg-slate-950 text-white hover:bg-slate-800 p-2 sm:px-4 sm:py-2.5 rounded-lg shadow-sm transition group"
+                className="relative inline-flex items-center gap-2 bg-slate-950 text-white hover:bg-slate-800 px-3.5 py-2 rounded-lg shadow-sm transition group shrink-0"
                 aria-label="View Wholesale Bag"
               >
-                <svg className="w-5 h-5 text-slate-300 group-hover:text-white transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-slate-300 group-hover:text-white transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <div className="hidden sm:flex flex-col text-left">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-400 leading-none">Bag</span>
-                  <span className="text-xs font-bold leading-tight">
+                <div className="hidden sm:flex flex-col text-left leading-none">
+                  <span className="text-[9px] uppercase tracking-wider text-slate-400 mb-0.5">Bag</span>
+                  <span className="text-xs font-bold">
                     {currency === "GBP" ? `£${currentSubtotal.toFixed(2)}` : `$${currentSubtotal.toFixed(2)}`}
                   </span>
                 </div>
