@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Product, CATEGORIES } from "@/data/products";
 import { useProducts } from "@/components/ProductContext";
+import { useAuth } from "@/components/AuthContext";
 import { uploadProductImage } from "@/lib/supabaseStorage";
 import { Upload, Trash2, CheckCircle2, Loader2, Star, Plus, Image as ImageIcon } from "lucide-react";
 
@@ -58,6 +59,7 @@ function NewProductContent() {
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
   const { products, addProduct, updateProduct, getProductById } = useProducts();
+  const { user } = useAuth();
 
   const isEditing = Boolean(editId);
 
@@ -289,6 +291,39 @@ function NewProductContent() {
   const profitGBP = Number((formSuggestedRetailGBP - formPriceGBP).toFixed(2));
   const markupPercent = formPriceGBP > 0 ? Math.round((profitGBP / formPriceGBP) * 100) : 0;
   const keystoneMultiple = formPriceGBP > 0 ? (formSuggestedRetailGBP / formPriceGBP).toFixed(1) : "0.0";
+
+  // Protect Product Creation - Require admin session
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="bg-[#FAF9F6] min-h-screen py-16 flex items-center justify-center px-4">
+        <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center max-w-md w-full shadow-sm space-y-4">
+          <div className="w-14 h-14 rounded-full bg-amber-50 border border-amber-200 text-amber-900 flex items-center justify-center mx-auto text-2xl shadow-xs">
+            👑
+          </div>
+          <h2 className="text-xl font-bold text-slate-950">
+            Administrator Access Required
+          </h2>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Product listing creation and wholesale line-sheet editing is restricted to authorized administrative personnel.
+          </p>
+          <div className="pt-2 space-y-2">
+            <Link
+              href="/account/login"
+              className="w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider py-3.5 rounded-lg block transition shadow-sm"
+            >
+              Sign In as Administrator &rarr;
+            </Link>
+            <Link
+              href="/"
+              className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 rounded-lg block transition"
+            >
+              Return to Wholesale Storefront
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-8 sm:py-12">

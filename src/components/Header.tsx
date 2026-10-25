@@ -11,9 +11,8 @@ export default function Header() {
   const pathname = usePathname();
   const { currency, setCurrency, minimumOrderFormatted } = useCurrency();
   const { totalItemsCount, currentSubtotal, isMinimumMet, remainingForMinimum } = useCart();
-  const { user, logout, demoLogin } = useAuth();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showDemoModal, setShowDemoModal] = useState(false);
 
   return (
     <>
@@ -64,13 +63,32 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Quick Demo Switcher Pill */}
-            <button
-              onClick={() => setShowDemoModal(true)}
-              className="text-[11px] sm:text-xs text-amber-400 hover:text-amber-300 transition underline underline-offset-2 font-medium truncate max-w-[170px] sm:max-w-none"
-            >
-              {user ? `Account: ${user.companyName}` : "Demo Logins"}
-            </button>
+            {/* Account / Trade Login Links */}
+            {user ? (
+              <Link
+                href="/account"
+                className="text-[11px] sm:text-xs text-amber-400 hover:text-amber-300 transition font-medium flex items-center gap-1.5"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span className="truncate max-w-[170px] sm:max-w-none">Account: {user.companyName}</span>
+              </Link>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/account/login"
+                  className="text-[11px] sm:text-xs text-slate-300 hover:text-white transition font-medium"
+                >
+                  Trade Login
+                </Link>
+                <span className="text-slate-600">•</span>
+                <Link
+                  href="/account/register"
+                  className="text-[11px] sm:text-xs text-amber-400 hover:text-amber-300 transition font-semibold"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -350,91 +368,6 @@ export default function Header() {
           </div>
         )}
       </header>
-
-      {/* Demo Account Modal for Fast Review & Testing */}
-      {showDemoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-slate-200 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <h3 className="font-serif-luxury text-lg sm:text-xl font-bold text-slate-950">
-                Switch Wholesale Test Account
-              </h3>
-              <button
-                onClick={() => setShowDemoModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-xl font-bold p-1"
-                aria-label="Close"
-              >
-                ✕
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-600 mt-3 mb-4 leading-relaxed">
-              Test the platform from different business perspectives without typing credentials:
-            </p>
-
-            <div className="space-y-2.5">
-              <button
-                onClick={() => {
-                  demoLogin("uk_retailer");
-                  setCurrency("GBP");
-                  setShowDemoModal(false);
-                }}
-                className="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-slate-900 hover:bg-slate-50 transition flex items-center justify-between"
-              >
-                <div>
-                  <div className="font-semibold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
-                    <span>🇬🇧</span> Kensington Fine Jewels Ltd (London)
-                  </div>
-                  <div className="text-[11px] text-slate-500">UK Retailer • VAT Registered • Gold Tier</div>
-                </div>
-                <span className="text-xs font-semibold text-slate-900">Switch →</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  demoLogin("us_boutique");
-                  setCurrency("USD");
-                  setShowDemoModal(false);
-                }}
-                className="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-slate-900 hover:bg-slate-50 transition flex items-center justify-between"
-              >
-                <div>
-                  <div className="font-semibold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
-                    <span>🇺🇸</span> SoHo Mineral &amp; Silver Co. (New York)
-                  </div>
-                  <div className="text-[11px] text-slate-500">US Boutique • EIN Exemption • Diamond Tier</div>
-                </div>
-                <span className="text-xs font-semibold text-slate-900">Switch →</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  demoLogin("admin");
-                  setShowDemoModal(false);
-                }}
-                className="w-full text-left p-3 rounded-lg border border-amber-300 bg-amber-50/50 hover:bg-amber-100/60 transition flex items-center justify-between"
-              >
-                <div>
-                  <div className="font-semibold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
-                    <span>👑</span> Merchant &amp; Factory Admin Portal
-                  </div>
-                  <div className="text-[11px] text-slate-600">Full order management, product editor, status controls</div>
-                </div>
-                <span className="text-xs font-bold text-amber-900">Admin View →</span>
-              </button>
-            </div>
-
-            <div className="mt-5 pt-3 border-t border-slate-100 flex justify-end">
-              <button
-                onClick={() => setShowDemoModal(false)}
-                className="text-xs text-slate-600 hover:text-slate-900 px-4 py-2 font-medium"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

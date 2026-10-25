@@ -99,17 +99,31 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
+  password TEXT,
   company_name TEXT,
-  business_type TEXT,
+  website TEXT,
+  phone_number TEXT,
   vat_or_tax_id TEXT,
-  country TEXT,
+  address TEXT,
   city TEXT,
+  state_or_county TEXT,
+  postal_code TEXT,
+  country TEXT,
+  business_type TEXT,
   role TEXT NOT NULL DEFAULT 'retailer',
   tier TEXT NOT NULL DEFAULT 'Silver Partner',
   is_approved BOOLEAN DEFAULT true,
   credit_terms_eligible BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Ensure all columns exist for existing installations
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS website TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS phone_number TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS address TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS state_or_county TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS postal_code TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS password TEXT;
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
@@ -118,6 +132,34 @@ CREATE POLICY "Allow public access for profiles"
   ON public.profiles FOR ALL
   USING (true)
   WITH CHECK (true);
+
+-- Seed System Administrator (Dilwar Group)
+INSERT INTO public.profiles (
+  id, name, email, password, company_name, website, phone_number,
+  vat_or_tax_id, address, city, state_or_county, postal_code, country,
+  business_type, role, tier, is_approved, credit_terms_eligible
+) VALUES (
+  'usr-admin-dilwar',
+  'Dilwar Hussain',
+  'dilwargroup@gmail.com',
+  'skhussain1998',
+  'Dilwar Group Wholesale HQ',
+  'https://argent-silver-wholesale.vercel.app',
+  '+44 20 7946 0888',
+  'GB 992 108 411',
+  '14 Hatton Garden, Suite 401',
+  'London',
+  'Greater London',
+  'EC1N 8AT',
+  'UK',
+  'Wholesale Manufacturer & Importer',
+  'admin',
+  'Diamond Volume Partner',
+  true,
+  true
+) ON CONFLICT (email) DO UPDATE SET
+  password = EXCLUDED.password,
+  role = 'admin';
 
 -- 4. STORAGE BUCKET FOR PRODUCT PHOTOS
 INSERT INTO storage.buckets (id, name, public) 

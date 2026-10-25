@@ -192,6 +192,39 @@ function AdminPortalContent() {
   const totalInventoryValueUSD = products.reduce((sum, p) => sum + p.priceUSD * p.stockCount, 0);
   const lowStockCount = products.filter((p) => p.stockCount < 20).length;
 
+  // Protect Admin Portal - Require dilwargroup@gmail.com or admin role
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="bg-[#FAF9F6] min-h-screen py-16 flex items-center justify-center px-4">
+        <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center max-w-md w-full shadow-sm space-y-4">
+          <div className="w-14 h-14 rounded-full bg-amber-50 border border-amber-200 text-amber-900 flex items-center justify-center mx-auto text-2xl shadow-xs">
+            👑
+          </div>
+          <h2 className="text-xl font-bold text-slate-950">
+            Administrator Access Required
+          </h2>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            This merchant command portal is strictly restricted to authorized administrative personnel.
+          </p>
+          <div className="pt-2 space-y-2">
+            <Link
+              href="/account/login"
+              className="w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider py-3.5 rounded-lg block transition shadow-sm"
+            >
+              Sign In as Administrator &rarr;
+            </Link>
+            <Link
+              href="/"
+              className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 rounded-lg block transition"
+            >
+              Return to Wholesale Storefront
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-8 sm:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

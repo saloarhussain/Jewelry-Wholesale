@@ -62,6 +62,26 @@ export default function AccountDashboardPage() {
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-6 sm:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+        {/* Admin Operational Access Alert Banner */}
+        {user.role === "admin" && (
+          <div className="bg-amber-50 border border-amber-300 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4 shadow-xs">
+            <div>
+              <span className="text-xs font-bold text-amber-950 flex items-center gap-2">
+                <span className="text-base">👑</span> System Administrator Session Active
+              </span>
+              <p className="text-xs text-amber-900 mt-1">
+                You have administrative access to manage product listings, inventory stock levels, and commercial orders.
+              </p>
+            </div>
+            <Link
+              href="/admin"
+              className="bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-lg shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+            >
+              Open Admin Command Center &rarr;
+            </Link>
+          </div>
+        )}
+
         {/* Top Header */}
         <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm">
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
@@ -71,13 +91,13 @@ export default function AccountDashboardPage() {
                 <span>/</span>
                 <span className="text-slate-900 font-semibold">Retailer Portal</span>
               </nav>
-              <h1 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-slate-950">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-950">
                 {user.companyName}
               </h1>
               <p className="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-1.5">
                 <span>Authorized Buyer: <strong className="text-slate-800">{user.name}</strong></span>
                 <span>•</span>
-                <span>{user.city}, {user.country === "UK" ? "United Kingdom 🇬🇧" : "United States 🇺🇸"}</span>
+                <span>{user.city}, {user.country}</span>
               </p>
             </div>
 
@@ -97,6 +117,59 @@ export default function AccountDashboardPage() {
               >
                 Log Out
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Registered Business Profile & Credentials Card */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm space-y-4">
+          <div className="border-b border-slate-100 pb-3 flex justify-between items-center">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span>🏢</span>
+              <span>Registered Business Profile &amp; Contact Credentials</span>
+            </h3>
+            <span className="text-[11px] text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Verified B2B Account
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Company Name</span>
+              <span className="font-semibold text-slate-900 block">{user.companyName}</span>
+              <span className="text-[11px] text-slate-500">{user.businessType || "Jewelry Boutique"}</span>
+            </div>
+
+            <div>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Owner / Contact</span>
+              <span className="font-semibold text-slate-900 block">{user.name}</span>
+              <span className="text-[11px] text-slate-500">{user.email}</span>
+            </div>
+
+            <div>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Phone &amp; Website</span>
+              <span className="font-semibold text-slate-900 block">{user.phoneNumber || "Not provided"}</span>
+              {user.website ? (
+                <a
+                  href={user.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] text-amber-700 hover:underline truncate block"
+                >
+                  {user.website}
+                </a>
+              ) : (
+                <span className="text-[11px] text-slate-400">No website registered</span>
+              )}
+            </div>
+
+            <div>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Registered Address</span>
+              <span className="font-semibold text-slate-900 block">{user.address || user.city}</span>
+              <span className="text-[11px] text-slate-500">
+                {[user.city, user.stateOrCounty, user.postalCode, user.country].filter(Boolean).join(", ")}
+              </span>
             </div>
           </div>
         </div>

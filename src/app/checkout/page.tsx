@@ -22,16 +22,17 @@ export default function CheckoutPage() {
   const { currency, minimumOrderFormatted } = useCurrency();
   const { user } = useAuth();
 
-  const [country, setCountry] = useState<"UK" | "USA">(user?.country || (currency === "USD" ? "USA" : "UK"));
+  const initialCountry: "UK" | "USA" = (user?.country?.toLowerCase().includes("us") || currency === "USD") ? "USA" : "UK";
+  const [country, setCountry] = useState<"UK" | "USA">(initialCountry);
   const [companyName, setCompanyName] = useState(user?.companyName || "");
   const [buyerName, setBuyerName] = useState(user?.name || "");
   const [buyerEmail, setBuyerEmail] = useState(user?.email || "");
-  const [buyerPhone, setBuyerPhone] = useState("+44 20 7946 0888");
+  const [buyerPhone, setBuyerPhone] = useState(user?.phoneNumber || "+44 20 7946 0888");
   const [vatTaxId, setVatTaxId] = useState(user?.vatOrTaxId || "");
-  const [line1, setLine1] = useState(country === "UK" ? "12 Hatton Garden" : "450 7th Avenue");
-  const [city, setCity] = useState(country === "UK" ? "London" : "New York");
-  const [stateOrCounty, setStateOrCounty] = useState(country === "UK" ? "Greater London" : "NY");
-  const [postalCode, setPostalCode] = useState(country === "UK" ? "EC1N 8DH" : "10123");
+  const [line1, setLine1] = useState(user?.address || (country === "UK" ? "12 Hatton Garden" : "450 7th Avenue"));
+  const [city, setCity] = useState(user?.city || (country === "UK" ? "London" : "New York"));
+  const [stateOrCounty, setStateOrCounty] = useState(user?.stateOrCounty || (country === "UK" ? "Greater London" : "NY"));
+  const [postalCode, setPostalCode] = useState(user?.postalCode || (country === "UK" ? "EC1N 8DH" : "10123"));
   const [paymentMethod, setPaymentMethod] = useState<"Bank Wire Transfer (BACS/ACH)" | "Credit/Debit Card" | "Net 30 Terms">("Bank Wire Transfer (BACS/ACH)");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -42,7 +43,12 @@ export default function CheckoutPage() {
       setCompanyName(user.companyName);
       setBuyerName(user.name);
       setBuyerEmail(user.email);
-      setCountry(user.country);
+      setCountry(user.country.toLowerCase().includes("us") ? "USA" : "UK");
+      if (user.phoneNumber) setBuyerPhone(user.phoneNumber);
+      if (user.address) setLine1(user.address);
+      if (user.city) setCity(user.city);
+      if (user.stateOrCounty) setStateOrCounty(user.stateOrCounty);
+      if (user.postalCode) setPostalCode(user.postalCode);
       if (user.vatOrTaxId) setVatTaxId(user.vatOrTaxId);
     }
   }, [user]);
