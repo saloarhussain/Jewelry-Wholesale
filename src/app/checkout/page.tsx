@@ -136,6 +136,17 @@ export default function CheckoutPage() {
       // fallback
     }
 
+    // Save order into Supabase database via API
+    try {
+      fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newOrder),
+      }).catch((err) => console.warn("Could not sync order to database:", err));
+    } catch {
+      // ignore
+    }
+
     clearCart();
 
     setTimeout(() => {

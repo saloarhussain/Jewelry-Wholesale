@@ -134,7 +134,7 @@ function NewProductContent() {
   };
 
   // Submit Handler
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -172,7 +172,7 @@ function NewProductContent() {
     ];
 
     if (isEditing && editId) {
-      updateProduct(editId, {
+      await updateProduct(editId, {
         name: formName.trim(),
         sku: formSku.trim(),
         category: formCategory,
@@ -221,7 +221,7 @@ function NewProductContent() {
         seoKeywords: keywordsArray,
       };
 
-      addProduct(newProduct);
+      await addProduct(newProduct);
     }
 
     // Navigate back to admin inventory tab with notification parameter

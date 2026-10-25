@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 export interface WholesaleUser {
   id: string;
@@ -141,6 +142,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAllUsers(updated);
     localStorage.setItem("argent_all_users", JSON.stringify(updated));
     saveUserData(newUser);
+
+    if (isSupabaseConfigured()) {
+      try {
+        await supabase.from("profiles").insert([
+          {
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email,
+            company_name: newUser.companyName,
+            business_type: newUser.businessType,
+            vat_or_tax_id: newUser.vatOrTaxId,
+            country: newUser.country,
+            city: newUser.city,
+            role: newUser.role,
+            tier: newUser.tier,
+            is_approved: newUser.isApproved,
+            credit_terms_eligible: newUser.creditTermsEligible,
+          },
+        ]);
+      } catch (err) {
+        console.warn("Failed to sync new profile to Supabase:", err);
+      }
+    }
+
     return { success: true };
   };
 

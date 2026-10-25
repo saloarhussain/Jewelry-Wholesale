@@ -8,6 +8,7 @@ import { INITIAL_ORDERS, WholesaleOrder } from "@/data/orders";
 import { Product, CATEGORIES } from "@/data/products";
 import { useAuth } from "@/components/AuthContext";
 import { useProducts } from "@/components/ProductContext";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 function AdminPortalContent() {
   const { user } = useAuth();
@@ -55,6 +56,16 @@ function AdminPortalContent() {
     } catch {
       setOrders(INITIAL_ORDERS);
     }
+
+    // Fetch live orders from Supabase database via API
+    fetch("/api/orders")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success && Array.isArray(data.orders) && data.orders.length > 0) {
+          setOrders(data.orders);
+        }
+      })
+      .catch((err) => console.warn("Failed to fetch orders from Supabase API:", err));
   }, []);
 
   const saveOrders = (updated: WholesaleOrder[]) => {
@@ -69,6 +80,9 @@ function AdminPortalContent() {
   const handleUpdateStatus = (orderId: string, newStatus: WholesaleOrder["status"]) => {
     const updated = orders.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o));
     saveOrders(updated);
+    if (isSupabaseConfigured()) {
+      supabase.from("orders").update({ status: newStatus }).eq("id", orderId).then();
+    }
     setEditSuccessMsg(`Order ${orderId} updated to ${newStatus}`);
     setTimeout(() => setEditSuccessMsg(""), 3000);
   };
@@ -76,6 +90,9 @@ function AdminPortalContent() {
   const handleUpdateTracking = (orderId: string, newTracking: string) => {
     const updated = orders.map((o) => (o.id === orderId ? { ...o, trackingNumber: newTracking } : o));
     saveOrders(updated);
+    if (isSupabaseConfigured()) {
+      supabase.from("orders").update({ tracking_number: newTracking }).eq("id", orderId).then();
+    }
     setEditSuccessMsg(`Tracking updated for ${orderId}`);
     setTimeout(() => setEditSuccessMsg(""), 3000);
   };
