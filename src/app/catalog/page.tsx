@@ -1,17 +1,20 @@
 "use client";
 
 import React, { useState, useMemo, Suspense } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CATEGORIES, Product } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { useCurrency } from "@/components/CurrencyContext";
 import { useProducts } from "@/components/ProductContext";
+import { useAuth } from "@/components/AuthContext";
 
 function CatalogContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("cat") || "All";
   const { currency, minimumOrderFormatted } = useCurrency();
   const { products } = useProducts();
+  const { user } = useAuth();
 
   const [category, setCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState("");
@@ -80,6 +83,44 @@ function CatalogContent() {
             </div>
           </div>
         </div>
+
+        {/* Unauthenticated Trade Member Gating Notice */}
+        {!user && (
+          <div className="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-slate-800 text-white rounded-2xl p-4 sm:p-5 mb-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-400/15 border border-amber-400/30 text-amber-300 flex items-center justify-center text-base flex-shrink-0">
+                🔒
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xs sm:text-sm font-bold text-white">
+                    Direct Trade Pricing Gated
+                  </h2>
+                  <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[10px] font-semibold px-2 py-0.5 rounded">
+                    B2B Jeweler Exclusive
+                  </span>
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-300 mt-0.5">
+                  Wholesale unit costs, volume discount matrices, and bulk ordering are revealed upon signing in to your verified trade account.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5 flex-shrink-0">
+              <Link
+                href="/account/login?redirect=/catalog"
+                className="bg-white hover:bg-slate-100 text-slate-950 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg transition shadow"
+              >
+                Sign In to View Prices
+              </Link>
+              <Link
+                href="/account/register"
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs px-3.5 py-2.5 rounded-lg transition"
+              >
+                Apply for Trade Account
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Search & Filter Toolbar */}
         <div className="bg-white rounded-xl border border-slate-200/90 p-3 sm:p-4 mb-8 shadow-sm space-y-3 sm:space-y-4">

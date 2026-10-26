@@ -178,6 +178,24 @@ export default function CheckoutPage() {
           </p>
         </div>
 
+        {/* Guest prompt to sign in */}
+        {!user && (
+          <div className="bg-amber-50 border border-amber-200/90 rounded-xl p-4 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-950 shadow-sm">
+            <div className="flex items-center gap-2.5">
+              <span className="text-lg">🔒</span>
+              <span>
+                Already have a verified wholesale account? <strong>Sign in</strong> to auto-fill your registered company details and view approved invoice terms.
+              </span>
+            </div>
+            <Link
+              href="/account/login?redirect=/checkout"
+              className="bg-slate-950 hover:bg-slate-800 text-white font-bold px-4 py-2 rounded-lg text-xs self-start sm:self-auto uppercase tracking-wide flex-shrink-0 transition"
+            >
+              Trade Sign In
+            </Link>
+          </div>
+        )}
+
         <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Checkout Form */}
           <div className="lg:col-span-8 space-y-6">

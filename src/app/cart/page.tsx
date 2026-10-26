@@ -5,9 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import { useCurrency } from "@/components/CurrencyContext";
+import { useAuth } from "@/components/AuthContext";
 import { PRODUCTS } from "@/data/products";
 
 export default function CartPage() {
+  const { user } = useAuth();
   const {
     items,
     updateQuantity,
@@ -46,6 +48,24 @@ export default function CartPage() {
             Minimum trade order requirement: <strong className="text-slate-800">{minimumOrderFormatted}</strong>. Combine any articles across our 925 collections.
           </p>
         </div>
+
+        {/* Trade Account Notice if Guest */}
+        {!user && items.length > 0 && (
+          <div className="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-slate-800 text-white rounded-xl p-4 mb-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5">
+              <span className="text-base text-amber-300">🔒</span>
+              <span>
+                <strong>Trade Member Tip:</strong> Sign in with your registered business account to link orders to your VAT/Tax ID, store delivery addresses, and view approved terms.
+              </span>
+            </div>
+            <Link
+              href="/account/login?redirect=/cart"
+              className="bg-white hover:bg-slate-100 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs uppercase tracking-wide self-start sm:self-auto transition flex-shrink-0"
+            >
+              Trade Sign In
+            </Link>
+          </div>
+        )}
 
         {/* Prominent Minimum Order Status Banner */}
         <div

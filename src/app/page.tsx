@@ -6,10 +6,12 @@ import Image from "next/image";
 import { PRODUCTS, CATEGORIES } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { useCurrency } from "@/components/CurrencyContext";
+import { useAuth } from "@/components/AuthContext";
 import JsonLd, { FAQ_SCHEMA } from "@/components/JsonLd";
 
 export default function HomePage() {
   const { currency, formatPrice, minimumOrderFormatted } = useCurrency();
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -142,9 +144,15 @@ export default function HomePage() {
                     <h3 className="font-serif-luxury text-lg font-bold text-white">
                       Liquid Herringbone Snake Chain
                     </h3>
-                    <span className="text-amber-400 font-bold text-lg">
-                      {formatPrice(14.50)} <span className="text-xs font-normal text-slate-400">/ unit</span>
-                    </span>
+                    {user ? (
+                      <span className="text-amber-400 font-bold text-lg">
+                        {formatPrice(14.50)} <span className="text-xs font-normal text-slate-400">/ unit</span>
+                      </span>
+                    ) : (
+                      <span className="text-amber-300 font-semibold text-xs bg-slate-800/90 border border-slate-700 px-2.5 py-1 rounded-md flex items-center gap-1">
+                        🔒 Trade Login for Price
+                      </span>
+                    )}
                   </div>
 
                   <p className="text-xs text-slate-400 leading-relaxed">
@@ -152,7 +160,9 @@ export default function HomePage() {
                   </p>
 
                   <div className="pt-2 flex items-center justify-between border-t border-slate-800 text-xs">
-                    <span className="text-slate-400">Starting pack: 3 pcs ({formatPrice(43.50)})</span>
+                    <span className="text-slate-400">
+                      {user ? `Starting pack: 3 pcs (${formatPrice(43.50)})` : "Pack MOQ: 3 pcs (Trade Gated)"}
+                    </span>
                     <Link
                       href="/product/slv-001"
                       className="text-amber-400 hover:text-amber-300 font-bold underline underline-offset-4 flex items-center gap-1"
@@ -234,7 +244,9 @@ export default function HomePage() {
                 Trending Wholesale Silver Collections
               </h2>
               <p className="text-xs text-slate-500 mt-1">
-                All prices reflect wholesale trade rates. Add any combination to meet the {minimumOrderFormatted} MOQ.
+                {user
+                  ? `All prices reflect wholesale trade rates. Add any combination to meet the ${minimumOrderFormatted} MOQ.`
+                  : "Direct manufacturer pricing & bulk order packs are unlocked for verified B2B trade accounts."}
               </p>
             </div>
 
