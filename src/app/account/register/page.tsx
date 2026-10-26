@@ -69,6 +69,8 @@ function RegisterForm() {
   const [emailOtpLoading, setEmailOtpLoading] = useState(false);
   const [emailOtpError, setEmailOtpError] = useState("");
   const [emailDevCode, setEmailDevCode] = useState<string | null>(null);
+  const [emailDispatched, setEmailDispatched] = useState(false);
+  const [resendNotice, setResendNotice] = useState("");
   const [emailResendTimer, setEmailResendTimer] = useState(0);
 
   // Countdown timer for email OTP resend
@@ -99,6 +101,8 @@ function RegisterForm() {
       if (data.success) {
         setEmailOtpSent(true);
         setEmailDevCode(data.devCode || null);
+        setEmailDispatched(Boolean(data.dispatchedViaApi));
+        setResendNotice(data.resendNotice || "");
         setEmailResendTimer(30);
       } else {
         setEmailOtpError(data.error || "Failed to dispatch email verification code.");
@@ -110,9 +114,10 @@ function RegisterForm() {
     }
   };
 
-  const handleVerifyEmailOtp = async () => {
-    if (!emailOtpInput || emailOtpInput.trim().length !== 6) {
-      setEmailOtpError("Please enter the 6-digit code.");
+  const handleVerifyEmailOtp = async (overrideCode?: string) => {
+    const codeToVerify = (overrideCode || emailOtpInput || "").trim();
+    if (!codeToVerify || codeToVerify.length !== 6) {
+      setEmailOtpError("Please enter the 6-digit verification code.");
       return;
     }
     setEmailOtpLoading(true);
@@ -124,7 +129,7 @@ function RegisterForm() {
         body: JSON.stringify({
           action: "verify-email",
           email,
-          code: emailOtpInput.trim(),
+          code: codeToVerify,
         }),
       });
       const data = await res.json();
@@ -309,7 +314,7 @@ function RegisterForm() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Owner Name */}
-            <div>
+            <div className="sm:col-span-2">
               <label className="font-semibold text-slate-700 block mb-1">Owner / Contact Name *</label>
               <input
                 type="text"
@@ -322,14 +327,15 @@ function RegisterForm() {
             </div>
 
             {/* Email Field with Live Resend OTP Verification */}
-            <div>
-              <div className="flex justify-between items-center mb-1">
+            <div className="sm:col-span-2">
+              <div className="flex justify-between items-center mb-1.5">
                 <label className="font-semibold text-slate-700 flex items-center gap-1.5">
                   <span>Business Email Address *</span>
+                  <span className="text-[10px] text-slate-400 font-normal">(Login &amp; Invoicing)</span>
                 </label>
                 {emailVerified ? (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300">
-                    <span>✓</span> Verified
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-300">
+                    <span>✓</span> Email Verified
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 text-[10px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-semibold">
@@ -361,14 +367,14 @@ function RegisterForm() {
                     type="button"
                     disabled={emailOtpLoading || !email.includes("@")}
                     onClick={handleSendEmailOtp}
-                    className="px-3.5 py-3 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap shadow-xs"
+                    className="px-4 py-3 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap shadow-xs"
                   >
                     {emailOtpLoading ? (
                       "Sending..."
                     ) : (
                       <>
                         <span>✉️</span>
-                        <span>{emailOtpSent ? "Resend" : "Verify"}</span>
+                        <span>{emailOtpSent ? "Resend OTP" : "Send Verification OTP"}</span>
                       </>
                     )}
                   </button>
@@ -391,57 +397,90 @@ function RegisterForm() {
 
               {/* Email OTP Card */}
               {!emailVerified && emailOtpSent && (
-                <div className="mt-2.5 p-3.5 bg-slate-50 border border-slate-300 rounded-xl space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-slate-900 flex items-center gap-1">
-                      <span>📨</span> Code sent to <strong className="underline">{email}</strong>
-                    </span>
-                    {emailResendTimer > 0 ? (
-                      <span className="text-[10px] text-slate-400 font-mono">Resend in {emailResendTimer}s</span>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={handleSendEmailOtp}
-                        className="text-[10px] text-amber-800 hover:underline font-bold"
-                      >
-                        Resend Code
-                      </button>
-                    )}
-                  </div>
-
-                  {emailDevCode && (
-                    <div className="flex items-center justify-between bg-amber-50/80 border border-amber-200 text-amber-950 px-2.5 py-1.5 rounded-lg text-[11px]">
-                      <span>🔑 <strong>Demo Code:</strong> <code className="font-mono font-bold tracking-wider">{emailDevCode}</code></span>
-                      <button
-                        type="button"
-                        onClick={() => setEmailOtpInput(emailDevCode)}
-                        className="text-[10px] font-bold bg-amber-200 hover:bg-amber-300 text-amber-950 px-2 py-0.5 rounded transition"
-                      >
-                        Auto-fill
-                      </button>
+                <div className="mt-3 p-4 bg-slate-50 border border-slate-300 rounded-xl space-y-3 shadow-xs">
+                  {emailDispatched ? (
+                    <div>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 border-b border-slate-200">
+                        <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                          <span className="text-emerald-600">✓</span>
+                          <span>Verification code sent to: <strong className="underline">{email}</strong></span>
+                        </span>
+                        {emailResendTimer > 0 ? (
+                          <span className="text-[11px] text-slate-500 font-mono">Resend in {emailResendTimer}s</span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleSendEmailOtp}
+                            className="text-xs text-amber-800 hover:underline font-bold self-start sm:self-auto"
+                          >
+                            Resend Code
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        Please check your inbox (and spam folder) for the email from Argent &amp; Co.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="p-3.5 bg-amber-50/90 border border-amber-200 rounded-xl text-xs space-y-2.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-amber-950 flex items-center gap-1.5">
+                          <span>ℹ️</span>
+                          <span>Resend Sandbox Notice:</span>
+                        </span>
+                        {emailResendTimer > 0 ? (
+                          <span className="text-[11px] text-amber-800 font-mono">Resend in {emailResendTimer}s</span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleSendEmailOtp}
+                            className="text-[11px] text-amber-900 hover:underline font-bold"
+                          >
+                            Resend
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-amber-800 leading-relaxed">
+                        Resend free test domain delivers live emails to your account email (<strong>minecom2024@gmail.com</strong>). For other emails like <strong className="font-mono">{email}</strong>, use the instant code below to verify immediately:
+                      </p>
+                      {emailDevCode && (
+                        <div className="bg-white p-3 rounded-lg border border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-600 font-medium text-xs">Generated Code:</span>
+                            <span className="font-mono font-black text-xl tracking-[0.25em] text-slate-950 bg-slate-100 px-3 py-1 rounded border border-slate-300">{emailDevCode}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleVerifyEmailOtp(emailDevCode)}
+                            className="bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-lg transition shadow-xs whitespace-nowrap"
+                          >
+                            Auto-Fill &amp; Confirm
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {emailOtpError && (
-                    <p className="text-[11px] text-rose-600 font-semibold">⚠️ {emailOtpError}</p>
+                    <p className="text-xs text-rose-600 font-semibold bg-rose-50 p-2 rounded border border-rose-200">⚠️ {emailOtpError}</p>
                   )}
 
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2 pt-1">
                     <input
                       type="text"
                       maxLength={6}
                       value={emailOtpInput}
                       onChange={(e) => setEmailOtpInput(e.target.value.replace(/\D/g, ""))}
-                      placeholder="••••••"
-                      className="w-32 text-center font-mono font-black text-base tracking-[0.3em] bg-white border border-slate-300 rounded-lg p-2 focus:outline-none focus:border-slate-950"
+                      placeholder="Enter 6-digit code"
+                      className="w-full sm:w-48 text-center font-mono font-bold text-base tracking-[0.3em] bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:border-slate-950"
                     />
                     <button
                       type="button"
                       disabled={emailOtpLoading || emailOtpInput.length !== 6}
-                      onClick={handleVerifyEmailOtp}
-                      className="flex-1 bg-slate-950 hover:bg-slate-800 disabled:bg-slate-300 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition"
+                      onClick={() => handleVerifyEmailOtp()}
+                      className="bg-slate-950 hover:bg-slate-800 disabled:bg-slate-300 text-white font-bold text-xs uppercase tracking-wider px-6 py-2.5 rounded-lg transition shadow-xs"
                     >
-                      {emailOtpLoading ? "Verifying..." : "Confirm"}
+                      {emailOtpLoading ? "Verifying..." : "Confirm & Verify Email"}
                     </button>
                   </div>
                 </div>
