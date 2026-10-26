@@ -50,7 +50,9 @@ export async function POST(request: Request) {
       });
 
       let emailSent = false;
+      let resendNotice = "";
       const resendApiKey = process.env.RESEND_API_KEY;
+      const fromEmail = process.env.RESEND_FROM_EMAIL || "Argent & Co. Wholesale <onboarding@resend.dev>";
 
       if (resendApiKey) {
         try {
@@ -61,29 +63,39 @@ export async function POST(request: Request) {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              from: "Argent & Co. Trade <verify@argent-silver.com>",
-              to: normalizedEmail,
+              from: fromEmail,
+              to: [normalizedEmail],
               subject: `${otp} is your Argent & Co. Wholesale Trade verification code`,
               html: `
-                <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
-                  <h2 style="font-size: 20px; font-weight: bold; color: #0f172a; margin-top: 0;">ARGENT & CO.</h2>
-                  <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-top: -6px;">Wholesale Fine 925 Sterling Silver</p>
-                  <p style="font-size: 14px; color: #334155; line-height: 1.6;">Use the verification code below to verify your business email address and unlock trade pricing access:</p>
-                  <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 18px; text-align: center; margin: 24px 0;">
-                    <span style="font-size: 32px; font-weight: 800; letter-spacing: 6px; color: #020617; font-family: monospace;">${otp}</span>
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff;">
+                  <div style="text-align: center; margin-bottom: 24px;">
+                    <h2 style="font-size: 22px; font-weight: 800; letter-spacing: 0.15em; color: #020617; margin: 0;">ARGENT &amp; CO.</h2>
+                    <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: #64748b; margin-top: 4px;">Fine 925 Sterling Silver Wholesale</p>
                   </div>
-                  <p style="font-size: 12px; color: #64748b;">This code will expire in 10 minutes. If you did not apply for an Argent & Co. trade account, you can safely disregard this email.</p>
+                  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 20px;">
+                    <p style="font-size: 13px; color: #475569; margin: 0 0 12px;">Your 6-digit trade verification code is:</p>
+                    <div style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #020617; font-family: monospace;">${otp}</div>
+                    <p style="font-size: 11px; color: #94a3b8; margin: 12px 0 0;">Expires in 10 minutes</p>
+                  </div>
+                  <p style="font-size: 12px; color: #64748b; line-height: 1.6; margin: 0;">Enter this code on the registration page to verify your business email address and activate wholesale pricing privileges.</p>
                 </div>
               `,
             }),
           });
-          if (res.ok) emailSent = true;
-        } catch (err) {
+          const resData = await res.json();
+          if (res.ok) {
+            emailSent = true;
+          } else {
+            console.warn("Resend API notice:", resData);
+            resendNotice = resData?.message || "";
+          }
+        } catch (err: any) {
           console.warn("Resend email dispatch error:", err);
+          resendNotice = err?.message || "";
         }
       }
 
-      console.log(`[AUTH:EMAIL_OTP] Generated for ${normalizedEmail}: ${otp}`);
+      console.log(`[AUTH:EMAIL_OTP] Generated for ${normalizedEmail}: ${otp} (sent via Resend: ${emailSent})`);
 
       return NextResponse.json({
         success: true,
@@ -92,6 +104,7 @@ export async function POST(request: Request) {
           : `Verification code generated for ${normalizedEmail}`,
         devCode: otp,
         dispatchedViaApi: emailSent,
+        resendNotice: resendNotice || undefined,
       });
     }
 
