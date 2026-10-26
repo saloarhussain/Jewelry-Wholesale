@@ -153,15 +153,8 @@ export default function AccountDashboardPage() {
             </div>
 
             <div>
-              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">WhatsApp &amp; Website</span>
-              <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-slate-900 block">{user.phoneNumber || "Not provided"}</span>
-                {user.whatsappVerified && (
-                  <span className="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded flex items-center gap-0.5">
-                    <span>✓</span> WhatsApp
-                  </span>
-                )}
-              </div>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Phone &amp; Website</span>
+              <span className="font-semibold text-slate-900 block">{user.phoneNumber || "Not provided"}</span>
               {user.website ? (
                 <a
                   href={user.website}
