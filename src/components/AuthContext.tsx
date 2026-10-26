@@ -22,6 +22,8 @@ export interface WholesaleUser {
   tier: "Silver Partner" | "Gold Partner" | "Diamond Volume Partner";
   isApproved: boolean;
   creditTermsEligible: boolean;
+  emailVerified?: boolean;
+  whatsappVerified?: boolean;
   createdAt?: string;
 }
 
@@ -39,6 +41,8 @@ export interface RegisterPayload {
   postalCode: string;
   country: string;
   businessType: string;
+  emailVerified?: boolean;
+  whatsappVerified?: boolean;
 }
 
 interface AuthContextType {
@@ -71,6 +75,8 @@ export const ADMIN_USER: WholesaleUser = {
   tier: "Diamond Volume Partner",
   isApproved: true,
   creditTermsEligible: true,
+  emailVerified: true,
+  whatsappVerified: true,
   createdAt: "2026-01-01T00:00:00Z",
 };
 
@@ -172,6 +178,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tier: (data.tier as any) || "Silver Partner",
             isApproved: data.is_approved !== false,
             creditTermsEligible: Boolean(data.credit_terms_eligible),
+            emailVerified: Boolean(data.email_verified),
+            whatsappVerified: Boolean(data.whatsapp_verified || data.phone_verified),
             createdAt: data.created_at,
           };
           saveUserData(userFromDb);
@@ -221,6 +229,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       tier: "Silver Partner",
       isApproved: true,
       creditTermsEligible: false,
+      emailVerified: userData.emailVerified ?? false,
+      whatsappVerified: userData.whatsappVerified ?? false,
       createdAt: new Date().toISOString(),
     };
 
@@ -256,6 +266,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tier: newUser.tier,
             is_approved: newUser.isApproved,
             credit_terms_eligible: newUser.creditTermsEligible,
+            email_verified: newUser.emailVerified,
+            whatsapp_verified: newUser.whatsappVerified,
           },
         ]);
       } catch (err) {

@@ -124,6 +124,8 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS address TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS state_or_county TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS postal_code TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS password TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT false;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS whatsapp_verified BOOLEAN DEFAULT false;
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 

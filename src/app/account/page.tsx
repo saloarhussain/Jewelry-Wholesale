@@ -142,25 +142,37 @@ export default function AccountDashboardPage() {
             </div>
 
             <div>
-              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Owner / Contact</span>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Owner &amp; Email</span>
               <span className="font-semibold text-slate-900 block">{user.name}</span>
-              <span className="text-[11px] text-slate-500">{user.email}</span>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="text-[11px] text-slate-600">{user.email}</span>
+                {user.emailVerified && (
+                  <span className="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">✓ Verified</span>
+                )}
+              </div>
             </div>
 
             <div>
-              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Phone &amp; Website</span>
-              <span className="font-semibold text-slate-900 block">{user.phoneNumber || "Not provided"}</span>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">WhatsApp &amp; Website</span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-semibold text-slate-900 block">{user.phoneNumber || "Not provided"}</span>
+                {user.whatsappVerified && (
+                  <span className="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded flex items-center gap-0.5">
+                    <span>✓</span> WhatsApp
+                  </span>
+                )}
+              </div>
               {user.website ? (
                 <a
                   href={user.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[11px] text-amber-700 hover:underline truncate block"
+                  className="text-[11px] text-amber-700 hover:underline truncate block mt-0.5"
                 >
                   {user.website}
                 </a>
               ) : (
-                <span className="text-[11px] text-slate-400">No website registered</span>
+                <span className="text-[11px] text-slate-400 mt-0.5 block">No website registered</span>
               )}
             </div>
 
