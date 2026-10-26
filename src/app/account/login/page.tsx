@@ -16,6 +16,7 @@ function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -76,15 +77,24 @@ function LoginForm() {
         <div>
           <div className="flex justify-between items-center mb-1.5">
             <label className="font-semibold text-slate-700">Password *</label>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-[11px] font-medium text-slate-500 hover:text-slate-900 transition"
+            >
+              {showPassword ? "Hide password" : "Show password"}
+            </button>
           </div>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••••••"
-            className="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-slate-900 text-sm focus:outline-none focus:border-slate-950 focus:bg-white transition"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••••"
+              className="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-slate-900 text-sm focus:outline-none focus:border-slate-950 focus:bg-white transition pr-10"
+            />
+          </div>
         </div>
 
         <button

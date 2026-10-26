@@ -308,7 +308,7 @@ function NewProductContent() {
           </p>
           <div className="pt-2 space-y-2">
             <Link
-              href="/account/login"
+              href="/account/login?redirect=/admin/products/new"
               className="w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider py-3.5 rounded-lg block transition shadow-sm"
             >
               Sign In as Administrator &rarr;

@@ -145,11 +145,6 @@ export default function Footer() {
                   Apply for Wholesale Account
                 </Link>
               </li>
-              <li>
-                <Link href="/admin" className="hover:text-white transition text-slate-500">
-                  Merchant Management Portal
-                </Link>
-              </li>
             </ul>
           </div>
 

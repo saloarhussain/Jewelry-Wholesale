@@ -168,13 +168,6 @@ export default function Header() {
               >
                 <span>🇺🇸</span> USA Boutiques
               </Link>
-              <Link
-                href="/admin"
-                className="text-[11px] xl:text-xs bg-slate-900 hover:bg-slate-800 text-white font-medium px-2.5 py-1.5 rounded-lg shadow-xs transition inline-flex items-center gap-1.5"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>Admin</span>
-              </Link>
             </nav>
 
             {/* Right Side Actions */}
@@ -182,6 +175,16 @@ export default function Header() {
               {/* Account State (Desktop) */}
               {user ? (
                 <div className="hidden sm:flex items-center gap-1.5">
+                  {user.role === "admin" && (
+                    <Link
+                      href="/admin"
+                      className="text-[11px] xl:text-xs bg-slate-900 hover:bg-slate-800 text-white font-medium px-2.5 py-1.5 rounded-lg shadow-xs transition inline-flex items-center gap-1.5 mr-1"
+                      title="Admin Command Center"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span>Admin</span>
+                    </Link>
+                  )}
                   <Link
                     href="/account"
                     className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-slate-50/80 hover:bg-slate-100 transition text-xs"
@@ -315,13 +318,6 @@ export default function Header() {
             >
               🇺🇸 USA Boutiques Guide
             </Link>
-            <Link
-              href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-bold text-amber-900 py-2 border-b border-slate-100"
-            >
-              👑 Merchant Admin Portal
-            </Link>
 
             <div className="pt-3 flex flex-col gap-2">
               {user ? (
@@ -329,6 +325,16 @@ export default function Header() {
                   <div className="text-xs text-slate-500">
                     Signed in as <strong>{user.companyName}</strong> ({user.tier})
                   </div>
+                  {user.role === "admin" && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full text-center py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span>👑 Admin Command Center</span>
+                    </Link>
+                  )}
                   <Link
                     href="/account"
                     onClick={() => setMobileMenuOpen(false)}
