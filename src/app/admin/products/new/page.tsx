@@ -75,7 +75,7 @@ function NewProductContent() {
   const [formSku, setFormSku] = useState(generateNewSku("Chains"));
   const [formCategory, setFormCategory] = useState<Product["category"]>("Chains");
   const [formBadge, setFormBadge] = useState<string>("");
-  const [formPurity, setFormPurity] = useState("Solid 925 Sterling Silver");
+  const [formPurity, setFormPurity] = useState("");
   const [formGramWeight, setFormGramWeight] = useState("");
   const [formFinish, setFormFinish] = useState("");
   const [formDimensions, setFormDimensions] = useState("");
@@ -84,7 +84,7 @@ function NewProductContent() {
   const [formPriceUSD, setFormPriceUSD] = useState<number | "">("");
   const [formSuggestedRetailGBP, setFormSuggestedRetailGBP] = useState<number | "">("");
   const [formSuggestedRetailUSD, setFormSuggestedRetailUSD] = useState<number | "">("");
-  const [formMoq, setFormMoq] = useState<number>(3);
+  const [formMoq, setFormMoq] = useState<number | "">("");
   const [formStockCount, setFormStockCount] = useState<number | "">("");
   const [productImages, setProductImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -240,11 +240,14 @@ function NewProductContent() {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
 
+    const parsedMoq = Number(formMoq) > 0 ? Number(formMoq) : 1;
+    const finalPurity = formPurity.trim() || "Solid 925 Sterling Silver";
+
     const tierPricing = [
-      { minQuantity: formMoq, discountPercentage: 0 },
-      { minQuantity: 15, discountPercentage: 8 },
-      { minQuantity: 50, discountPercentage: 15 },
-      { minQuantity: 100, discountPercentage: 22 },
+      { minQuantity: parsedMoq, discountPercentage: 0 },
+      { minQuantity: Math.max(15, parsedMoq * 2), discountPercentage: 8 },
+      { minQuantity: Math.max(50, parsedMoq * 5), discountPercentage: 15 },
+      { minQuantity: Math.max(100, parsedMoq * 10), discountPercentage: 22 },
     ];
 
     if (isEditing && editId) {
@@ -253,7 +256,7 @@ function NewProductContent() {
         sku: formSku.trim(),
         category: formCategory,
         badge: formBadge || undefined,
-        purity: formPurity.trim(),
+        purity: finalPurity,
         gramWeight: formGramWeight.trim(),
         finish: formFinish.trim(),
         dimensions: formDimensions.trim(),
@@ -262,7 +265,7 @@ function NewProductContent() {
         priceUSD: Number(formPriceUSD) || 0,
         suggestedRetailGBP: Number(formSuggestedRetailGBP) || 0,
         suggestedRetailUSD: Number(formSuggestedRetailUSD) || 0,
-        moq: Number(formMoq) || 1,
+        moq: parsedMoq,
         stockCount: Number(formStockCount) || 0,
         images: imagesArray,
         shortDescription: formShortDescription.trim(),
@@ -281,7 +284,7 @@ function NewProductContent() {
         sku: formSku.trim(),
         category: formCategory,
         badge: formBadge || undefined,
-        purity: formPurity.trim(),
+        purity: finalPurity,
         gramWeight: formGramWeight.trim(),
         finish: formFinish.trim(),
         dimensions: formDimensions.trim(),
@@ -290,7 +293,7 @@ function NewProductContent() {
         priceUSD: Number(formPriceUSD) || 0,
         suggestedRetailGBP: Number(formSuggestedRetailGBP) || 0,
         suggestedRetailUSD: Number(formSuggestedRetailUSD) || 0,
-        moq: Number(formMoq) || 1,
+        moq: parsedMoq,
         stockCount: Number(formStockCount) || 0,
         images: imagesArray,
         shortDescription: formShortDescription.trim(),
@@ -530,6 +533,7 @@ function NewProductContent() {
                     required
                     value={formPurity}
                     onChange={(e) => setFormPurity(e.target.value)}
+                    placeholder="Solid 925 Sterling Silver"
                     className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950 font-medium"
                   />
                   <p className="text-[11px] text-slate-400 mt-1">Virgin 925/1000 millesimal fineness guaranteed.</p>
@@ -1071,8 +1075,11 @@ function NewProductContent() {
                     min="1"
                     required
                     value={formMoq}
-                    onChange={(e) => setFormMoq(parseInt(e.target.value, 10) || 1)}
-                    placeholder="3"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setFormMoq(val === "" ? "" : parseInt(val, 10));
+                    }}
+                    placeholder="e.g. 3"
                     className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
                   />
                   <p className="text-[10px] text-slate-400 mt-1">
