@@ -3,22 +3,24 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { PRODUCTS, CATEGORIES } from "@/data/products";
+import { CATEGORIES } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { useCurrency } from "@/components/CurrencyContext";
 import { useAuth } from "@/components/AuthContext";
+import { useProducts } from "@/components/ProductContext";
 import JsonLd, { FAQ_SCHEMA } from "@/components/JsonLd";
 
 export default function HomePage() {
   const { currency, formatPrice, minimumOrderFormatted } = useCurrency();
   const { user } = useAuth();
+  const { products } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const filteredProducts =
     selectedCategory === "All"
-      ? PRODUCTS
-      : PRODUCTS.filter((p) => p.category === selectedCategory);
+      ? products
+      : products.filter((p) => p.category === selectedCategory);
 
   const faqs = [
     {
@@ -164,7 +166,7 @@ export default function HomePage() {
                       {user ? `Starting pack: 3 pcs (${formatPrice(43.50)})` : "Pack MOQ: 3 pcs (Trade Gated)"}
                     </span>
                     <Link
-                      href="/product/slv-001"
+                      href={products.length > 0 ? `/product/${products[0].id}` : "/catalog"}
                       className="text-amber-400 hover:text-amber-300 font-bold underline underline-offset-4 flex items-center gap-1"
                     >
                       View Line Specs →
@@ -269,11 +271,27 @@ export default function HomePage() {
           </div>
 
           {/* Product Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl border border-dashed border-slate-200 p-12 text-center max-w-md mx-auto my-6 shadow-xs">
+              <span className="text-3xl block mb-2">💎</span>
+              <h3 className="font-serif-luxury text-base font-bold text-slate-900">Wholesale Collections Updating</h3>
+              <p className="text-xs text-slate-500 mt-1 mb-5">
+                New certified solid 925 sterling silver wholesale lines are currently being uploaded.
+              </p>
+              <Link
+                href="/catalog"
+                className="bg-slate-950 text-white text-xs font-bold px-5 py-2.5 rounded-lg inline-block uppercase tracking-wider hover:bg-slate-800 transition"
+              >
+                Browse All Lines &rarr;
+              </Link>
+            </div>
+          )}
 
           <div className="mt-12 text-center">
             <Link

@@ -19,8 +19,9 @@ export async function GET(request: Request) {
 
       const { data, error } = await query;
 
-      if (!error && data && data.length > 0) {
-        const mapped = data.map(mapRowToProduct);
+      if (!error && data) {
+        const clean = data.filter((row: any) => !row.id.startsWith("slv-00"));
+        const mapped = clean.map(mapRowToProduct);
         return NextResponse.json({
           success: true,
           source: "supabase",

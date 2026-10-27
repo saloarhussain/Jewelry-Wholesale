@@ -26,8 +26,20 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 const STORAGE_KEY = "argent_wholesale_products";
 
+// Hardcoded legacy sample IDs to ignore/filter out from both Supabase & local cache
+const SAMPLE_IDS = new Set([
+  "slv-001",
+  "slv-002",
+  "slv-003",
+  "slv-004",
+  "slv-005",
+  "slv-006",
+  "slv-007",
+  "slv-008",
+]);
+
 export function ProductProvider({ children }: { children: React.ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(PRODUCTS);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDbConnected, setIsDbConnected] = useState(false);
 
@@ -44,8 +56,10 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
             .select("*")
             .order("created_at", { ascending: false });
 
-          if (!error && data && data.length > 0) {
-            const mapped = data.map(mapRowToProduct);
+          if (!error && data) {
+            // Filter out any seed sample products
+            const clean = data.filter((row: any) => !SAMPLE_IDS.has(row.id));
+            const mapped = clean.map(mapRowToProduct);
             setProducts(mapped);
             setIsDbConnected(true);
             try {
@@ -61,21 +75,22 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      // 2. Fallback to localStorage or static PRODUCTS
+      // 2. Fallback to localStorage or empty catalog
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
           const parsed: Product[] = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setProducts(parsed);
+          if (Array.isArray(parsed)) {
+            const clean = parsed.filter((p) => !SAMPLE_IDS.has(p.id));
+            setProducts(clean);
           } else {
-            setProducts(PRODUCTS);
+            setProducts([]);
           }
         } else {
-          setProducts(PRODUCTS);
+          setProducts([]);
         }
       } catch {
-        setProducts(PRODUCTS);
+        setProducts([]);
       } finally {
         setIsLoading(false);
       }
@@ -186,16 +201,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetToDefaults = async () => {
-    saveProductsLocal(PRODUCTS);
-    if (isSupabaseConfigured()) {
-      try {
-        // Upsert default products
-        const rows = PRODUCTS.map(mapProductToRow);
-        await supabase.from("products").upsert(rows);
-      } catch (err) {
-        console.error("Failed to reset defaults in Supabase:", err);
-      }
-    }
+    saveProductsLocal([]);
   };
 
   const getProductById = (id: string) => {

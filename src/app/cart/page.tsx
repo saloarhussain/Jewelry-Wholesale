@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import { useCurrency } from "@/components/CurrencyContext";
 import { useAuth } from "@/components/AuthContext";
-import { PRODUCTS } from "@/data/products";
+import { useProducts } from "@/components/ProductContext";
 
 export default function CartPage() {
   const { user } = useAuth();
@@ -25,12 +25,13 @@ export default function CartPage() {
     minimumOrderTarget,
   } = useCart();
   const { currency, formatPrice, minimumOrderFormatted } = useCurrency();
+  const { products } = useProducts();
 
   // Progress percentage toward £100 / $130
   const progressPercent = Math.min(100, Math.round((currentSubtotal / minimumOrderTarget) * 100));
 
   // Find a product to recommend if below minimum
-  const addOnProduct = PRODUCTS.find((p) => p.id === "slv-003") || PRODUCTS[0];
+  const addOnProduct = products.length > 0 ? products[0] : null;
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen py-10">
@@ -231,15 +232,17 @@ export default function CartPage() {
                         Need an easy item to cross the {minimumOrderFormatted} threshold?
                       </h4>
                       <p className="text-[11px] text-amber-800">
-                        Add a 5-pack of our best-selling Pavé Huggie Hoops for just {formatPrice(7.80 * 5)}.
+                        {addOnProduct
+                          ? `Add ${addOnProduct.name} to fulfill the minimum trade threshold.`
+                          : "Browse our wholesale collection to meet the opening order threshold."}
                       </p>
                     </div>
                   </div>
                   <Link
-                    href={`/product/${addOnProduct.id}`}
+                    href={addOnProduct ? `/product/${addOnProduct.id}` : "/catalog"}
                     className="bg-amber-900 text-white text-xs font-bold px-3 py-1.5 rounded hover:bg-amber-800 transition whitespace-nowrap"
                   >
-                    View Item →
+                    {addOnProduct ? "View Item →" : "Browse Catalog →"}
                   </Link>
                 </div>
               )}
