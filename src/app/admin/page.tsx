@@ -767,6 +767,14 @@ function AdminPortalContent() {
                             <span className="text-[11px] font-mono text-slate-400 block">
                               {p.sku} • {p.category}
                             </span>
+                            {p.supplierName && (
+                              <span className="inline-flex items-center gap-1 text-[10px] text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded mt-1 font-medium">
+                                <span>🏭 {p.supplierName}</span>
+                                {p.supplierPrice != null && (
+                                  <span className="text-purple-500 font-mono font-bold">(Cost £{p.supplierPrice.toFixed(2)})</span>
+                                )}
+                              </span>
+                            )}
                             <div className="flex items-center gap-2 text-[11px] text-slate-600 mt-0.5">
                               <span>{p.gramWeight} (925)</span>
                               <span>•</span>
@@ -905,6 +913,17 @@ function AdminPortalContent() {
                                   <span className="text-[11px] font-mono text-slate-400 block">
                                     {p.sku} • MOQ {p.moq} pcs
                                   </span>
+                                  {p.supplierName && (
+                                    <span
+                                      className="inline-flex items-center gap-1 text-[10px] text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded mt-1 font-medium"
+                                      title={p.supplierProductCode ? `Supplier Code: ${p.supplierProductCode}` : undefined}
+                                    >
+                                      <span>🏭 {p.supplierName}</span>
+                                      {p.supplierPrice != null && (
+                                        <span className="text-purple-600 font-mono font-bold">(Cost £{p.supplierPrice.toFixed(2)})</span>
+                                      )}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
                             </td>

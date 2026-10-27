@@ -43,6 +43,10 @@ export function mapRowToProduct(row: any): Product {
       ? JSON.parse(row.tier_pricing)
       : [],
     seoKeywords: Array.isArray(row.seo_keywords) ? row.seo_keywords : [],
+    supplierName: row.supplier_name || undefined,
+    supplierProductCode: row.supplier_product_code || undefined,
+    supplierProductLink: row.supplier_product_link || undefined,
+    supplierPrice: row.supplier_price != null ? Number(row.supplier_price) : undefined,
   };
 }
 
@@ -73,6 +77,10 @@ export function mapProductToRow(product: Product): Record<string, any> {
     reviews_count: product.reviewsCount,
     tier_pricing: product.tierPricing,
     seo_keywords: product.seoKeywords,
+    supplier_name: product.supplierName || null,
+    supplier_product_code: product.supplierProductCode || null,
+    supplier_product_link: product.supplierProductLink || null,
+    supplier_price: product.supplierPrice != null ? product.supplierPrice : null,
     updated_at: new Date().toISOString(),
   };
 }

@@ -34,6 +34,11 @@ CREATE TABLE IF NOT EXISTS public.products (
   reviews_count INTEGER DEFAULT 0,
   tier_pricing JSONB DEFAULT '[]'::jsonb,
   seo_keywords TEXT[] DEFAULT '{}'::TEXT[],
+  -- Private internal sourcing columns (Excluded from public queries/SEO)
+  supplier_name TEXT,
+  supplier_product_code TEXT,
+  supplier_product_link TEXT,
+  supplier_price NUMERIC(10, 2),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

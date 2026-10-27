@@ -74,6 +74,10 @@ export async function PUT(
       if (body.description !== undefined) updateData.description = body.description;
       if (body.tierPricing !== undefined) updateData.tier_pricing = body.tierPricing;
       if (body.seoKeywords !== undefined) updateData.seo_keywords = body.seoKeywords;
+      if (body.supplierName !== undefined) updateData.supplier_name = body.supplierName;
+      if (body.supplierProductCode !== undefined) updateData.supplier_product_code = body.supplierProductCode;
+      if (body.supplierProductLink !== undefined) updateData.supplier_product_link = body.supplierProductLink;
+      if (body.supplierPrice !== undefined) updateData.supplier_price = body.supplierPrice;
 
       const { data, error } = await supabase
         .from("products")

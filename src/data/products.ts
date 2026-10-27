@@ -28,6 +28,11 @@ export interface Product {
   reviewsCount: number;
   tierPricing: ProductTier[];
   seoKeywords: string[];
+  // Private Admin & Sourcing Details (Strictly internal - never exposed in public catalog, SEO, or JSON-LD)
+  supplierName?: string;
+  supplierProductCode?: string;
+  supplierProductLink?: string;
+  supplierPrice?: number;
 }
 
 export const PRODUCTS: Product[] = [

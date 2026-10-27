@@ -8,7 +8,7 @@ import { Product, CATEGORIES } from "@/data/products";
 import { useProducts } from "@/components/ProductContext";
 import { useAuth } from "@/components/AuthContext";
 import { uploadProductImage } from "@/lib/supabaseStorage";
-import { Upload, Trash2, CheckCircle2, Loader2, Star, Plus, Image as ImageIcon } from "lucide-react";
+import { Upload, Trash2, CheckCircle2, Loader2, Star, Plus, Image as ImageIcon, Lock, ShieldCheck, ExternalLink } from "lucide-react";
 
 // Curated high-res jewelry photography presets for instant 1-click selection
 const IMAGE_PRESETS = [
@@ -94,6 +94,11 @@ function NewProductContent() {
   const [formShortDescription, setFormShortDescription] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [formSeoKeywords, setFormSeoKeywords] = useState("");
+  // Private Supplier Details (Strictly Internal Admin Only - No SEO)
+  const [formSupplierName, setFormSupplierName] = useState("");
+  const [formSupplierProductCode, setFormSupplierProductCode] = useState("");
+  const [formSupplierProductLink, setFormSupplierProductLink] = useState("");
+  const [formSupplierPrice, setFormSupplierPrice] = useState<number | "">("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // If editing an existing product, populate the fields
@@ -124,6 +129,10 @@ function NewProductContent() {
         setFormShortDescription(existing.shortDescription);
         setFormDescription(existing.description);
         setFormSeoKeywords(existing.seoKeywords ? existing.seoKeywords.join(", ") : "");
+        setFormSupplierName(existing.supplierName || "");
+        setFormSupplierProductCode(existing.supplierProductCode || "");
+        setFormSupplierProductLink(existing.supplierProductLink || "");
+        setFormSupplierPrice(existing.supplierPrice != null ? existing.supplierPrice : "");
       }
     }
   }, [editId, getProductById]);
@@ -259,6 +268,10 @@ function NewProductContent() {
         shortDescription: formShortDescription.trim(),
         description: formDescription.trim(),
         seoKeywords: keywordsArray,
+        supplierName: formSupplierName.trim() || undefined,
+        supplierProductCode: formSupplierProductCode.trim() || undefined,
+        supplierProductLink: formSupplierProductLink.trim() || undefined,
+        supplierPrice: formSupplierPrice !== "" ? Number(formSupplierPrice) : undefined,
       });
     } else {
       const newProduct: Product = {
@@ -286,6 +299,10 @@ function NewProductContent() {
         reviewsCount: 1,
         tierPricing,
         seoKeywords: keywordsArray,
+        supplierName: formSupplierName.trim() || undefined,
+        supplierProductCode: formSupplierProductCode.trim() || undefined,
+        supplierProductLink: formSupplierProductLink.trim() || undefined,
+        supplierPrice: formSupplierPrice !== "" ? Number(formSupplierPrice) : undefined,
       };
 
       await addProduct(newProduct);
@@ -790,6 +807,138 @@ function NewProductContent() {
                     These keywords feed automated Schema.org Product JSON-LD structured data and dynamic meta tags.
                   </p>
                 </div>
+              </div>
+            </div>
+
+            {/* Card 5: Private Sourcing & Supplier Details (Confidential / Internal Admin Only - Strictly No SEO) */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+              <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                <h2 className="font-serif-luxury text-base font-bold text-slate-950 flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-purple-900 text-white text-xs flex items-center justify-center font-mono font-bold">5</span>
+                  <span>Supplier Details &amp; Sourcing</span>
+                </h2>
+                <span className="text-[11px] text-purple-800 bg-purple-50 px-2.5 py-0.5 rounded-full font-semibold border border-purple-200 inline-flex items-center gap-1">
+                  <Lock className="w-3 h-3 text-purple-700" /> Private &bull; No SEO
+                </span>
+              </div>
+
+              {/* Privacy Notice Banner */}
+              <div className="bg-purple-50/70 border border-purple-200/80 rounded-xl p-3 text-[11px] text-purple-950 flex items-start gap-2.5">
+                <ShieldCheck className="w-4 h-4 text-purple-700 flex-shrink-0 mt-0.5" />
+                <p className="leading-relaxed">
+                  <strong className="font-semibold text-purple-900">Confidential Sourcing Information:</strong> This section is strictly private to store administrators for procurement, reordering, and margin management. It is <strong>never displayed</strong> on the public storefront, hidden from wholesale buyer accounts, and completely excluded from search engine crawlers and SEO metadata.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                {/* 1. Supplier Name */}
+                <div>
+                  <label className="font-bold text-slate-800 block mb-1">
+                    Supplier Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formSupplierName}
+                    onChange={(e) => setFormSupplierName(e.target.value)}
+                    placeholder="e.g. Arezzo Silver SpA, Bangkok Gems Ltd"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
+                  />
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Manufacturer, factory, or vendor source.
+                  </p>
+                </div>
+
+                {/* 2. Supplier Product Code */}
+                <div>
+                  <label className="font-bold text-slate-800 block mb-1">
+                    Supplier Product Code / Item Ref
+                  </label>
+                  <input
+                    type="text"
+                    value={formSupplierProductCode}
+                    onChange={(e) => setFormSupplierProductCode(e.target.value)}
+                    placeholder="e.g. SUP-CHN-8821, IT-925-042"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono focus:outline-none focus:border-slate-950"
+                  />
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Supplier&apos;s internal catalog SKU or factory reference.
+                  </p>
+                </div>
+
+                {/* 3. Supplier Product Link */}
+                <div className="sm:col-span-2">
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="font-bold text-slate-800">
+                      Supplier Product Link
+                    </label>
+                    {formSupplierProductLink && (
+                      <a
+                        href={formSupplierProductLink.startsWith("http") ? formSupplierProductLink : `https://${formSupplierProductLink}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-purple-700 hover:text-purple-900 font-semibold inline-flex items-center gap-1 transition"
+                      >
+                        <span>Open Supplier Portal</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
+                  <input
+                    type="url"
+                    value={formSupplierProductLink}
+                    onChange={(e) => setFormSupplierProductLink(e.target.value)}
+                    placeholder="e.g. https://supplier-portal.com/catalog/item/8821"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
+                  />
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Direct URL to reorder, view factory specifications, or message supplier.
+                  </p>
+                </div>
+
+                {/* 4. Supplier Product Price (Cost Price) */}
+                <div>
+                  <label className="font-bold text-slate-800 block mb-1">
+                    Supplier Product Price (Unit Cost)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2.5 text-slate-400 font-bold">£</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formSupplierPrice}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormSupplierPrice(val === "" ? "" : parseFloat(val));
+                      }}
+                      placeholder="0.00"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
+                    />
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Net unit cost paid to supplier (before shipping/customs).
+                  </p>
+                </div>
+
+                {/* Sourcing Margin Preview Box */}
+                {typeof formSupplierPrice === "number" && formSupplierPrice > 0 && typeof formPriceGBP === "number" && formPriceGBP > 0 && (
+                  <div className="bg-purple-50 border border-purple-200 rounded-xl p-3 flex flex-col justify-center">
+                    <span className="text-[10px] uppercase font-bold text-purple-800 tracking-wider">
+                      Internal Sourcing Gross Spread
+                    </span>
+                    <div className="flex items-baseline justify-between mt-1">
+                      <span className="text-base font-extrabold text-purple-950">
+                        +£{(formPriceGBP - formSupplierPrice).toFixed(2)} / unit
+                      </span>
+                      <span className="text-xs font-bold text-purple-800">
+                        {Math.round(((formPriceGBP - formSupplierPrice) / formSupplierPrice) * 100)}% markup
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-purple-600 mt-0.5">
+                      Spread between supplier cost and wholesale trade price.
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
