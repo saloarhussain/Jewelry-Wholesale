@@ -86,7 +86,7 @@ function NewProductContent() {
   const [formSuggestedRetailUSD, setFormSuggestedRetailUSD] = useState<number>(76.00);
   const [formMoq, setFormMoq] = useState<number>(3);
   const [formStockCount, setFormStockCount] = useState<number>(120);
-  const [productImages, setProductImages] = useState<string[]>([IMAGE_PRESETS[0].url]);
+  const [productImages, setProductImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -123,7 +123,7 @@ function NewProductContent() {
         if (existing.images && existing.images.length > 0) {
           setProductImages(existing.images);
         } else {
-          setProductImages([IMAGE_PRESETS[0].url]);
+          setProductImages([]);
         }
         setFormShortDescription(existing.shortDescription);
         setFormDescription(existing.description);
