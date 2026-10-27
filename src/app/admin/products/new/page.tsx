@@ -74,30 +74,26 @@ function NewProductContent() {
   const [formName, setFormName] = useState("");
   const [formSku, setFormSku] = useState(generateNewSku("Chains"));
   const [formCategory, setFormCategory] = useState<Product["category"]>("Chains");
-  const [formBadge, setFormBadge] = useState<string>("New In");
+  const [formBadge, setFormBadge] = useState<string>("");
   const [formPurity, setFormPurity] = useState("Solid 925 Sterling Silver");
-  const [formGramWeight, setFormGramWeight] = useState("14.5g");
-  const [formFinish, setFormFinish] = useState("Diamond-Cut Mirror Polish & Rhodium Barrier");
-  const [formDimensions, setFormDimensions] = useState("Length: 45cm (18 in) | Width: 4.0mm");
+  const [formGramWeight, setFormGramWeight] = useState("");
+  const [formFinish, setFormFinish] = useState("");
+  const [formDimensions, setFormDimensions] = useState("");
   const [formHallmarked, setFormHallmarked] = useState(true);
-  const [formPriceGBP, setFormPriceGBP] = useState<number>(18.50);
-  const [formPriceUSD, setFormPriceUSD] = useState<number>(24.05);
-  const [formSuggestedRetailGBP, setFormSuggestedRetailGBP] = useState<number>(59.00);
-  const [formSuggestedRetailUSD, setFormSuggestedRetailUSD] = useState<number>(76.00);
+  const [formPriceGBP, setFormPriceGBP] = useState<number | "">("");
+  const [formPriceUSD, setFormPriceUSD] = useState<number | "">("");
+  const [formSuggestedRetailGBP, setFormSuggestedRetailGBP] = useState<number | "">("");
+  const [formSuggestedRetailUSD, setFormSuggestedRetailUSD] = useState<number | "">("");
   const [formMoq, setFormMoq] = useState<number>(3);
-  const [formStockCount, setFormStockCount] = useState<number>(120);
+  const [formStockCount, setFormStockCount] = useState<number | "">("");
   const [productImages, setProductImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [showPresets, setShowPresets] = useState(false);
-  const [formShortDescription, setFormShortDescription] = useState(
-    "Ultra-fluid liquid silk drape. Crafted in solid 925 silver with mirror rhodium anti-tarnish protective plating."
-  );
-  const [formDescription, setFormDescription] = useState(
-    "Engineered from certified solid 925 sterling silver with a diamond-cut mirror finish. Stamped with authentic 925 purity hallmark compliant with UK Assay Office regulations and US FTC precious metals standards."
-  );
-  const [formSeoKeywords, setFormSeoKeywords] = useState("wholesale silver chains, 925 solid sterling silver bulk, UK silver jewelry supplier");
+  const [formShortDescription, setFormShortDescription] = useState("");
+  const [formDescription, setFormDescription] = useState("");
+  const [formSeoKeywords, setFormSeoKeywords] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // If editing an existing product, populate the fields
@@ -133,8 +129,14 @@ function NewProductContent() {
   }, [editId, getProductById]);
 
   // Handle Price GBP change to auto-calculate recommended USD and retail MSRP
-  const handlePriceGBPChange = (val: number) => {
+  const handlePriceGBPChange = (val: number | "") => {
     setFormPriceGBP(val);
+    if (val === "" || val === 0 || isNaN(val)) {
+      setFormPriceUSD("");
+      setFormSuggestedRetailGBP("");
+      setFormSuggestedRetailUSD("");
+      return;
+    }
     const usd = Number((val * 1.30).toFixed(2));
     setFormPriceUSD(usd);
     const msrpGBP = Number((val * 3.2).toFixed(2));
@@ -213,6 +215,12 @@ function NewProductContent() {
       return;
     }
 
+    if (formPriceGBP === "" || Number(formPriceGBP) <= 0) {
+      alert("Please provide a valid wholesale price (GBP).");
+      setIsSubmitting(false);
+      return;
+    }
+
     const keywordsArray = formSeoKeywords
       .split(",")
       .map((k) => k.trim())
@@ -241,12 +249,12 @@ function NewProductContent() {
         finish: formFinish.trim(),
         dimensions: formDimensions.trim(),
         hallmarked: formHallmarked,
-        priceGBP: Number(formPriceGBP),
-        priceUSD: Number(formPriceUSD),
-        suggestedRetailGBP: Number(formSuggestedRetailGBP),
-        suggestedRetailUSD: Number(formSuggestedRetailUSD),
-        moq: Number(formMoq),
-        stockCount: Number(formStockCount),
+        priceGBP: Number(formPriceGBP) || 0,
+        priceUSD: Number(formPriceUSD) || 0,
+        suggestedRetailGBP: Number(formSuggestedRetailGBP) || 0,
+        suggestedRetailUSD: Number(formSuggestedRetailUSD) || 0,
+        moq: Number(formMoq) || 1,
+        stockCount: Number(formStockCount) || 0,
         images: imagesArray,
         shortDescription: formShortDescription.trim(),
         description: formDescription.trim(),
@@ -265,12 +273,12 @@ function NewProductContent() {
         finish: formFinish.trim(),
         dimensions: formDimensions.trim(),
         hallmarked: formHallmarked,
-        priceGBP: Number(formPriceGBP),
-        priceUSD: Number(formPriceUSD),
-        suggestedRetailGBP: Number(formSuggestedRetailGBP),
-        suggestedRetailUSD: Number(formSuggestedRetailUSD),
-        moq: Number(formMoq),
-        stockCount: Number(formStockCount),
+        priceGBP: Number(formPriceGBP) || 0,
+        priceUSD: Number(formPriceUSD) || 0,
+        suggestedRetailGBP: Number(formSuggestedRetailGBP) || 0,
+        suggestedRetailUSD: Number(formSuggestedRetailUSD) || 0,
+        moq: Number(formMoq) || 1,
+        stockCount: Number(formStockCount) || 0,
         images: imagesArray,
         shortDescription: formShortDescription.trim(),
         description: formDescription.trim(),
@@ -288,9 +296,11 @@ function NewProductContent() {
   };
 
   // Real-Time Profit Calculation
-  const profitGBP = Number((formSuggestedRetailGBP - formPriceGBP).toFixed(2));
-  const markupPercent = formPriceGBP > 0 ? Math.round((profitGBP / formPriceGBP) * 100) : 0;
-  const keystoneMultiple = formPriceGBP > 0 ? (formSuggestedRetailGBP / formPriceGBP).toFixed(1) : "0.0";
+  const pGbp = typeof formPriceGBP === "number" ? formPriceGBP : 0;
+  const sGbp = typeof formSuggestedRetailGBP === "number" ? formSuggestedRetailGBP : 0;
+  const profitGBP = pGbp > 0 && sGbp >= pGbp ? Number((sGbp - pGbp).toFixed(2)) : 0;
+  const markupPercent = pGbp > 0 ? Math.round((profitGBP / pGbp) * 100) : 0;
+  const keystoneMultiple = pGbp > 0 ? (sGbp / pGbp).toFixed(1) : "0.0";
 
   // Protect Product Creation - Require admin session
   if (!user || user.role !== "admin") {
@@ -462,7 +472,7 @@ function NewProductContent() {
                     required
                     value={formShortDescription}
                     onChange={(e) => setFormShortDescription(e.target.value)}
-                    placeholder="Ultra-fluid liquid silk drape. Crafted in solid 925 silver with mirror rhodium protective plating."
+                    placeholder="e.g. Ultra-fluid liquid silk drape. Crafted in solid 925 silver with mirror rhodium protective plating."
                     className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
                   />
                 </div>
@@ -532,7 +542,7 @@ function NewProductContent() {
                     required
                     value={formFinish}
                     onChange={(e) => setFormFinish(e.target.value)}
-                    placeholder="Diamond-Cut Mirror Polish & Rhodium Barrier"
+                    placeholder="e.g. Diamond-Cut Mirror Polish & Rhodium Barrier"
                     className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
                   />
                 </div>
@@ -802,10 +812,14 @@ function NewProductContent() {
                     <input
                       type="number"
                       step="0.01"
-                      min="1"
+                      min="0.01"
                       required
                       value={formPriceGBP}
-                      onChange={(e) => handlePriceGBPChange(parseFloat(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        handlePriceGBPChange(val === "" ? "" : parseFloat(val));
+                      }}
+                      placeholder="0.00"
                       className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 text-slate-900 font-extrabold text-sm focus:outline-none focus:border-slate-950"
                     />
                   </div>
@@ -820,10 +834,14 @@ function NewProductContent() {
                     <input
                       type="number"
                       step="0.01"
-                      min="1"
+                      min="0.01"
                       required
                       value={formPriceUSD}
-                      onChange={(e) => setFormPriceUSD(parseFloat(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormPriceUSD(val === "" ? "" : parseFloat(val));
+                      }}
+                      placeholder="0.00"
                       className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 text-slate-900 font-extrabold text-sm focus:outline-none focus:border-slate-950"
                     />
                   </div>
@@ -839,10 +857,13 @@ function NewProductContent() {
                     <input
                       type="number"
                       step="0.01"
-                      min="1"
-                      required
+                      min="0.01"
                       value={formSuggestedRetailGBP}
-                      onChange={(e) => setFormSuggestedRetailGBP(parseFloat(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormSuggestedRetailGBP(val === "" ? "" : parseFloat(val));
+                      }}
+                      placeholder="0.00"
                       className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
                     />
                   </div>
@@ -857,10 +878,13 @@ function NewProductContent() {
                     <input
                       type="number"
                       step="0.01"
-                      min="1"
-                      required
+                      min="0.01"
                       value={formSuggestedRetailUSD}
-                      onChange={(e) => setFormSuggestedRetailUSD(parseFloat(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormSuggestedRetailUSD(val === "" ? "" : parseFloat(val));
+                      }}
+                      placeholder="0.00"
                       className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
                     />
                   </div>
@@ -899,6 +923,7 @@ function NewProductContent() {
                     required
                     value={formMoq}
                     onChange={(e) => setFormMoq(parseInt(e.target.value, 10) || 1)}
+                    placeholder="3"
                     className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
                   />
                   <p className="text-[10px] text-slate-400 mt-1">
@@ -915,7 +940,11 @@ function NewProductContent() {
                     min="0"
                     required
                     value={formStockCount}
-                    onChange={(e) => setFormStockCount(parseInt(e.target.value, 10) || 0)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setFormStockCount(val === "" ? "" : parseInt(val, 10));
+                    }}
+                    placeholder="e.g. 50"
                     className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
                   />
                   <p className="text-[10px] text-slate-400 mt-1">
