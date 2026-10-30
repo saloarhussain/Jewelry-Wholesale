@@ -234,15 +234,15 @@ function NewProductContent() {
 
   // Base Form Fields State
   const [formCategory, setFormCategory] = useState<JewelryCategory>("Rings");
-  const [formSubType, setFormSubType] = useState<string>("Solitaire");
+  const [formSubType, setFormSubType] = useState<string>("");
   const [formName, setFormName] = useState("");
   const [formSku, setFormSku] = useState(generateNewSku("Rings"));
   const [formBadge, setFormBadge] = useState<string>("");
   const [formShortDescription, setFormShortDescription] = useState("");
   const [formDescription, setFormDescription] = useState("");
-  const [formPurity, setFormPurity] = useState("Solid 925 Sterling Silver");
+  const [formPurity, setFormPurity] = useState("");
   const [formGramWeight, setFormGramWeight] = useState("");
-  const [formFinish, setFormFinish] = useState("Anti-Tarnish Rhodium Plating");
+  const [formFinish, setFormFinish] = useState("");
   const [formDimensions, setFormDimensions] = useState("");
   const [formHallmarked, setFormHallmarked] = useState(true);
 
@@ -269,56 +269,50 @@ function NewProductContent() {
 
   // Amazon / Flipkart Style Type-Specific Details
   // Rings
-  const [formRingSizes, setFormRingSizes] = useState<string[]>(["US 6", "US 7", "US 8"]);
-  const [formBandWidth, setFormBandWidth] = useState("2.2mm");
-  const [formSettingType, setFormSettingType] = useState("4-Prong Setting");
-  const [formRingSizingType, setFormRingSizingType] = useState("Standard Fixed Sizes");
+  const [formRingSizes, setFormRingSizes] = useState<string[]>([]);
+  const [formBandWidth, setFormBandWidth] = useState("");
+  const [formSettingType, setFormSettingType] = useState("");
+  const [formRingSizingType, setFormRingSizingType] = useState("");
 
   // Pendants
-  const [formPendantHeight, setFormPendantHeight] = useState("18mm");
-  const [formPendantWidth, setFormPendantWidth] = useState("12mm");
-  const [formBailOpening, setFormBailOpening] = useState("4.2mm (Fits up to 3.5mm Chains)");
-  const [formChainInclusion, setFormChainInclusion] = useState("Pendant Only (Chain Sold Separately)");
+  const [formPendantHeight, setFormPendantHeight] = useState("");
+  const [formPendantWidth, setFormPendantWidth] = useState("");
+  const [formBailOpening, setFormBailOpening] = useState("");
+  const [formChainInclusion, setFormChainInclusion] = useState("");
 
   // Bracelets
-  const [formBraceletLength, setFormBraceletLength] = useState("7.25 inches (18.5cm)");
-  const [formClaspType, setFormClaspType] = useState("Box Clasp with Dual Safety Latches");
-  const [formLinkStyle, setFormLinkStyle] = useState("Tennis Diamond-Set Links");
+  const [formBraceletLength, setFormBraceletLength] = useState("");
+  const [formClaspType, setFormClaspType] = useState("");
+  const [formLinkStyle, setFormLinkStyle] = useState("");
 
   // Necklaces
-  const [formNecklaceLength, setFormNecklaceLength] = useState("18 inches (Princess Length)");
-  const [formChainType, setFormChainType] = useState("Cable Link");
+  const [formNecklaceLength, setFormNecklaceLength] = useState("");
+  const [formChainType, setFormChainType] = useState("");
 
   // Bangles
-  const [formBangleSize, setFormBangleSize] = useState("2.4 (57.2mm Inner Diameter)");
-  const [formClosureType, setFormClosureType] = useState("Hinged with Hidden Safety Lock");
-  const [formBangleWidth, setFormBangleWidth] = useState("4.5mm");
+  const [formBangleSize, setFormBangleSize] = useState("");
+  const [formClosureType, setFormClosureType] = useState("");
+  const [formBangleWidth, setFormBangleWidth] = useState("");
 
   // Earrings
-  const [formEarringBacking, setFormEarringBacking] = useState("Push Back (Butterfly Friction)");
-  const [formEarringDrop, setFormEarringDrop] = useState("12mm");
+  const [formEarringBacking, setFormEarringBacking] = useState("");
+  const [formEarringDrop, setFormEarringDrop] = useState("");
 
   // Chains
-  const [formChainWeave, setFormChainWeave] = useState("Diamond-Cut Curb");
-  const [formChainGauge, setFormChainGauge] = useState("3.0mm");
+  const [formChainWeave, setFormChainWeave] = useState("");
+  const [formChainGauge, setFormChainGauge] = useState("");
 
   // Gemstone Details (Amazon / Flipkart Jewelry Specs)
-  const [formGemstoneType, setFormGemstoneType] = useState("Cubic Zirconia (AAA+ Optical Grade)");
-  const [formStoneCut, setFormStoneCut] = useState("Round Brilliant Cut");
-  const [formCaratWeight, setFormCaratWeight] = useState("1.25 CTW");
-  const [formStoneColor, setFormStoneColor] = useState("D-E-F Flawless White");
-  const [formStoneCount, setFormStoneCount] = useState<number | "">(1);
+  const [formGemstoneType, setFormGemstoneType] = useState("");
+  const [formStoneCut, setFormStoneCut] = useState("");
+  const [formCaratWeight, setFormCaratWeight] = useState("");
+  const [formStoneColor, setFormStoneColor] = useState("");
+  const [formStoneCount, setFormStoneCount] = useState<number | "">("");
 
   // SEO & Marketplace Listing Studio Fields
   const [formSeoTitle, setFormSeoTitle] = useState("");
   const [formSlug, setFormSlug] = useState("");
-  const [formKeyBullets, setFormKeyBullets] = useState<string[]>([
-    "💎 AUTHENTIC SOLID 925 STERLING SILVER: Certified genuine 925 sterling silver hallmarked in compliance with UK Assay and US FTC jewelry standards. Hypoallergenic, 100% nickel-free and lead-free for sensitive skin.",
-    "✨ OPTICAL BRILLIANCE & GEMSTONE CRAFTSMANSHIP: Hand-finished with premium optical stones, offering diamond-caliber optical fire and enduring durability.",
-    "📐 PRECISION SPECIFICATIONS & FIT: Engineered for supreme comfort fit, balanced daily weight, and luxury boutique presentation.",
-    "🛡️ ANTI-TARNISH PROTECTIVE FINISH: Plated with liquid-bright Rhodium and protective seal to preserve deep lustrous sheen and resist daily oxidation.",
-    "📦 WHOLESALE TRADE EXCELLENCE: Factory-direct wholesale pricing with low MOQ, suitable for high-margin retail markup (65%+ margin).",
-  ]);
+  const [formKeyBullets, setFormKeyBullets] = useState<string[]>([]);
   const [formMetaDescription, setFormMetaDescription] = useState("");
   const [formSeoKeywords, setFormSeoKeywords] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -387,9 +381,7 @@ function NewProductContent() {
   // Handle Category selection from Step 1
   const handleSelectJewelryType = (typeDef: JewelryTypeDefinition) => {
     setFormCategory(typeDef.category);
-    setFormSubType(typeDef.popularSubtypes[0] || "");
-    if (!formPurity) setFormPurity(typeDef.defaultPurity);
-    if (!formFinish) setFormFinish(typeDef.defaultFinish);
+    setFormSubType("");
     if (!isEditing) {
       setFormSku(generateNewSku(typeDef.category));
     }
@@ -415,12 +407,16 @@ function NewProductContent() {
   // 1-Click AI / Algorithmic SEO Listing Generator
   const handleAutoGenerateSEO = () => {
     const purityPrefix = formPurity.trim() || "Solid 925 Sterling Silver";
+    const defaultFinishVal = currentTypeDef.defaultFinish || "Anti-Tarnish Rhodium Plating";
+    if (!formPurity.trim()) setFormPurity("Solid 925 Sterling Silver");
+    if (!formFinish.trim()) setFormFinish(defaultFinishVal);
+
     const stoneDescriptor =
       formGemstoneType && formGemstoneType !== "Plain Solid Silver (No Stone)"
         ? `${formStoneCut ? formStoneCut + " " : ""}${formGemstoneType.replace(/\s*\(.*?\)\s*/g, "")}`
         : "";
     const styleDescriptor = formSubType && formSubType !== "Standard" ? formSubType : "";
-    const finishDescriptor = formFinish ? formFinish.replace(/Anti-Tarnish|Plated/gi, "").trim() : "Rhodium";
+    const finishDescriptor = (formFinish.trim() || defaultFinishVal).replace(/Anti-Tarnish|Plated/gi, "").trim() || "Rhodium";
     const categorySingular =
       formCategory === "Rings"
         ? "Ring"
@@ -466,19 +462,19 @@ function NewProductContent() {
     // 3. Dynamic Technical Dimensions formatting
     let dynamicDimensions = "";
     if (formCategory === "Rings") {
-      dynamicDimensions = `Band Width: ${formBandWidth || "2.2mm"} | Sizing: ${formRingSizes.join(", ") || "US 6, 7, 8"} | Setting: ${formSettingType}`;
+      dynamicDimensions = `Band Width: ${formBandWidth || "2.2mm"} | Sizing: ${formRingSizes.join(", ") || "US 6, 7, 8"} | Setting: ${formSettingType || "4-Prong Setting"}`;
     } else if (formCategory === "Pendants") {
-      dynamicDimensions = `Pendant Drop: ${formPendantHeight} × ${formPendantWidth} | Bail Opening: ${formBailOpening} | ${formChainInclusion}`;
+      dynamicDimensions = `Pendant Drop: ${formPendantHeight || "18mm"} × ${formPendantWidth || "12mm"} | Bail Opening: ${formBailOpening || "4.2mm"} | ${formChainInclusion || "Pendant Only"}`;
     } else if (formCategory === "Bracelets") {
-      dynamicDimensions = `Wrist Length: ${formBraceletLength} | Clasp: ${formClaspType} | Style: ${formLinkStyle}`;
+      dynamicDimensions = `Wrist Length: ${formBraceletLength || "7.25\" (18.5cm)"} | Clasp: ${formClaspType || "Box Clasp with Dual Safety Latches"} | Style: ${formLinkStyle || "Tennis Diamond-Set Links"}`;
     } else if (formCategory === "Necklaces") {
-      dynamicDimensions = `Drop Length: ${formNecklaceLength} | Clasp: ${formClaspType} | Weave: ${formChainType}`;
+      dynamicDimensions = `Drop Length: ${formNecklaceLength || "18 inches (Princess Length)"} | Clasp: ${formClaspType || "Lobster Claw"} | Weave: ${formChainType || "Cable Link"}`;
     } else if (formCategory === "Bangles") {
-      dynamicDimensions = `Bangle Size: ${formBangleSize} | Fastener: ${formClosureType} | Profile: ${formBangleWidth}`;
+      dynamicDimensions = `Bangle Size: ${formBangleSize || "2.4 (57.2mm)"} | Fastener: ${formClosureType || "Hinged with Hidden Safety Lock"} | Profile: ${formBangleWidth || "4.5mm"}`;
     } else if (formCategory === "Earrings") {
-      dynamicDimensions = `Backing: ${formEarringBacking} | Drop: ${formEarringDrop}`;
+      dynamicDimensions = `Backing: ${formEarringBacking || "Push Back"} | Drop: ${formEarringDrop || "12mm"}`;
     } else if (formCategory === "Chains") {
-      dynamicDimensions = `Weave: ${formChainWeave} | Gauge: ${formChainGauge} | Clasp: Lobster Claw`;
+      dynamicDimensions = `Weave: ${formChainWeave || "Diamond-Cut Curb"} | Gauge: ${formChainGauge || "3.0mm"} | Clasp: Lobster Claw`;
     } else {
       dynamicDimensions = `Length: 9" + 1" Extender | Clasp: Lobster Claw`;
     }
@@ -1013,7 +1009,7 @@ function NewProductContent() {
               {/* Proceed to Step 2 CTA */}
               <div className="flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-slate-100 gap-4">
                 <div className="text-xs text-slate-500">
-                  Ready to configure <strong className="text-slate-900">{formCategory} › {formSubType}</strong> technical specifications and SEO keywords.
+                  Ready to configure <strong className="text-slate-900">{formCategory}{formSubType ? ` › ${formSubType}` : ""}</strong> technical specifications and SEO keywords.
                 </div>
                 <button
                   type="button"
@@ -1047,8 +1043,14 @@ function NewProductContent() {
                     </span>
                     <h3 className="font-serif-luxury text-lg font-bold text-white flex items-center gap-2">
                       <span>{formCategory}</span>
-                      <span className="text-slate-400">&bull;</span>
-                      <span className="text-amber-200">{formSubType}</span>
+                      {formSubType ? (
+                        <>
+                          <span className="text-slate-400">&bull;</span>
+                          <span className="text-amber-200">{formSubType}</span>
+                        </>
+                      ) : (
+                        <span className="text-xs font-normal text-slate-400">(All Subtypes)</span>
+                      )}
                     </h3>
                   </div>
                 </div>
@@ -1146,6 +1148,7 @@ function NewProductContent() {
                         onChange={(e) => setFormSettingType(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
+                        <option value="">-- Select Setting Type --</option>
                         <option value="4-Prong Setting">4-Prong Setting (Solitaire)</option>
                         <option value="6-Prong Classic">6-Prong Classic</option>
                         <option value="Bezel Setting">Bezel Setting (Rim Shield)</option>
@@ -1163,6 +1166,7 @@ function NewProductContent() {
                         onChange={(e) => setFormRingSizingType(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
+                        <option value="">-- Select Sizing Mechanism --</option>
                         <option value="Standard Fixed Sizes">Standard Fixed Sizes</option>
                         <option value="Comfort-Fit Rounded Band">Comfort-Fit Rounded Band</option>
                         <option value="Open Flexible Adjustable">Open Flexible Adjustable</option>
@@ -1217,6 +1221,7 @@ function NewProductContent() {
                         onChange={(e) => setFormChainInclusion(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
+                        <option value="">-- Select Chain Option --</option>
                         <option value="Pendant Only (Chain Sold Separately)">Pendant Only (Chain Sold Separately)</option>
                         <option value="Includes 18&quot; 925 Italian Box Chain">Includes 18&quot; 925 Italian Box Chain</option>
                         <option value="Includes 16&quot;-18&quot; Adjustable Extender Chain">Includes 16&quot;-18&quot; Adjustable Extender Chain</option>
@@ -1246,6 +1251,7 @@ function NewProductContent() {
                         onChange={(e) => setFormClaspType(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
+                        <option value="">-- Select Clasp Mechanism --</option>
                         <option value="Box Clasp with Dual Safety Latches">Box Clasp with Dual Safety Latches (Tennis Style)</option>
                         <option value="Heavy Duty Lobster Claw">Heavy Duty Lobster Claw</option>
                         <option value="Spring Ring Clasp">Spring Ring Clasp</option>
@@ -1277,6 +1283,7 @@ function NewProductContent() {
                         onChange={(e) => setFormNecklaceLength(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
+                        <option value="">-- Select Drop Length --</option>
                         <option value="14 inches (Choker Length)">14 inches (Choker Length)</option>
                         <option value="16 inches (Collar Length)">16 inches (Collar Length)</option>
                         <option value="18 inches (Princess Length)">18 inches (Princess Length)</option>
@@ -1309,6 +1316,7 @@ function NewProductContent() {
                         onChange={(e) => setFormBangleSize(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
+                        <option value="">-- Select Bangle Sizing --</option>
                         <option value="2.2 (54.0mm Inner Diameter)">2.2 (54.0mm Inner Diameter)</option>
                         <option value="2.4 (57.2mm Inner Diameter)">2.4 (57.2mm Inner Diameter)</option>
                         <option value="2.6 (60.3mm Inner Diameter)">2.6 (60.3mm Inner Diameter)</option>
@@ -1325,6 +1333,7 @@ function NewProductContent() {
                         onChange={(e) => setFormClosureType(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
+                        <option value="">-- Select Closure Mechanism --</option>
                         <option value="Hinged with Hidden Safety Lock">Hinged with Hidden Safety Lock</option>
                         <option value="Screw-Lock Kada Pin">Screw-Lock Kada Pin</option>
                         <option value="Solid Slip-On (Rigid)">Solid Slip-On (Rigid)</option>
@@ -1355,6 +1364,7 @@ function NewProductContent() {
                         onChange={(e) => setFormEarringBacking(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
+                        <option value="">-- Select Back Finding --</option>
                         <option value="Push Back (Butterfly Friction)">Push Back (Butterfly Friction)</option>
                         <option value="Screw Back (Threaded Security)">Screw Back (Threaded Security)</option>
                         <option value="Lever Back (French Wire Snap)">Lever Back (French Wire Snap)</option>
@@ -1424,9 +1434,10 @@ function NewProductContent() {
                       onChange={(e) => setFormGemstoneType(e.target.value)}
                       className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                     >
+                      <option value="">-- Select Gemstone Type --</option>
+                      <option value="Plain Solid Silver (No Stone)">Plain Solid Silver (No Stone)</option>
                       <option value="Cubic Zirconia (AAA+ Optical Grade)">Cubic Zirconia (AAA+ Optical Grade)</option>
                       <option value="Moissanite (VVS1 DEF White)">Moissanite (VVS1 DEF White)</option>
-                      <option value="Plain Solid Silver (No Stone)">Plain Solid Silver (No Stone)</option>
                       <option value="Freshwater Cultured Pearl">Freshwater Cultured Pearl</option>
                       <option value="Natural Emerald / Ruby / Sapphire">Natural Gemstone (Precious)</option>
                       <option value="Black Onyx Enamel Inset">Black Onyx / Enamel Inset</option>
@@ -1440,6 +1451,7 @@ function NewProductContent() {
                       onChange={(e) => setFormStoneCut(e.target.value)}
                       className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                     >
+                      <option value="">-- Select Stone Cut / Shape --</option>
                       <option value="Round Brilliant Cut">Round Brilliant Cut (58 Facets)</option>
                       <option value="Princess Cut (Square)">Princess Cut (Square)</option>
                       <option value="Emerald Cut (Step Facets)">Emerald Cut (Step Facets)</option>
@@ -1851,28 +1863,84 @@ function NewProductContent() {
 
                 {/* Amazon / Flipkart Style 5 Key Feature Bullets ("About this item") */}
                 <div>
-                  <label className="font-bold text-slate-800 text-xs block mb-1">
-                    Amazon / Flipkart 5 Key Product Feature Bullets (&quot;About this item&quot;)
-                  </label>
-                  <div className="space-y-2">
-                    {formKeyBullets.map((bullet, bIdx) => (
-                      <div key={bIdx} className="flex gap-2">
-                        <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 font-mono text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-2">
-                          {bIdx + 1}
-                        </span>
-                        <textarea
-                          rows={2}
-                          value={bullet}
-                          onChange={(e) => {
-                            const updated = [...formKeyBullets];
-                            updated[bIdx] = e.target.value;
-                            setFormKeyBullets(updated);
-                          }}
-                          className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:outline-none focus:border-slate-950 leading-relaxed"
-                        />
-                      </div>
-                    ))}
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="font-bold text-slate-800 text-xs">
+                      Amazon / Flipkart 5 Key Product Feature Bullets (&quot;About this item&quot;)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setFormKeyBullets((prev) => [...prev, ""])}
+                      className="text-[11px] text-amber-800 hover:text-amber-950 font-bold flex items-center gap-1 transition"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Bullet</span>
+                    </button>
                   </div>
+
+                  {formKeyBullets.length === 0 ? (
+                    <div className="p-4 bg-slate-50 border border-dashed border-slate-300 rounded-xl text-center space-y-2">
+                      <p className="text-xs text-slate-500">
+                        No feature bullets added yet. Leave blank, type custom points, or auto-generate with 1-click.
+                      </p>
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setFormKeyBullets([""])}
+                          className="px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-slate-800 text-slate-800 font-bold text-xs inline-flex items-center gap-1.5 transition shadow-xs"
+                        >
+                          <Plus className="w-3 h-3" />
+                          <span>+ Add Bullet Point</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleAutoGenerateSEO}
+                          className="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs inline-flex items-center gap-1.5 transition shadow-xs"
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          <span>Auto-Generate 5 Bullets</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {formKeyBullets.map((bullet, bIdx) => (
+                        <div key={bIdx} className="flex gap-2 items-start">
+                          <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 font-mono text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-2">
+                            {bIdx + 1}
+                          </span>
+                          <textarea
+                            rows={2}
+                            value={bullet}
+                            placeholder={`e.g. Feature bullet point #${bIdx + 1}...`}
+                            onChange={(e) => {
+                              const updated = [...formKeyBullets];
+                              updated[bIdx] = e.target.value;
+                              setFormKeyBullets(updated);
+                            }}
+                            className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:outline-none focus:border-slate-950 leading-relaxed"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFormKeyBullets((prev) => prev.filter((_, idx) => idx !== bIdx));
+                            }}
+                            title="Remove bullet"
+                            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition mt-1"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => setFormKeyBullets((prev) => [...prev, ""])}
+                        className="text-xs text-slate-600 hover:text-slate-950 font-semibold inline-flex items-center gap-1 pt-1"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add another bullet point</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Meta Description */}
