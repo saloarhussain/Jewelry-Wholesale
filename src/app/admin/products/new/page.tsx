@@ -753,12 +753,12 @@ function NewProductContent() {
   }
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen py-8 sm:py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-[#FAF9F6] min-h-screen py-4 sm:py-8 lg:py-10 pb-24 lg:pb-12">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Top Header & Breadcrumb */}
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center pb-6 mb-6 border-b border-slate-200 gap-4">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center pb-4 sm:pb-6 mb-4 sm:mb-6 border-b border-slate-200 gap-3 sm:gap-4">
           <div>
-            <nav className="text-xs text-slate-500 mb-2 flex items-center gap-1.5 font-medium">
+            <nav className="text-[11px] sm:text-xs text-slate-500 mb-1.5 flex flex-wrap items-center gap-1.5 font-medium">
               <Link href="/" className="hover:text-slate-900 transition">Trade Home</Link>
               <span>/</span>
               <Link href="/admin?tab=catalog" className="hover:text-slate-900 transition">Merchant Portal</Link>
@@ -767,9 +767,9 @@ function NewProductContent() {
                 {isEditing ? "Edit Wholesale Listing" : "Add New Jewelry Listing"}
               </span>
             </nav>
-            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-slate-900 flex flex-wrap items-center gap-2 sm:gap-2.5">
               <span>{isEditing ? `Edit Listing: ${formName || "Product"}` : "Amazon & Flipkart Style Jewelry Listing"}</span>
-              <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
                 B2B Wholesale
               </span>
             </h1>
@@ -778,10 +778,10 @@ function NewProductContent() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 shrink-0">
             <Link
               href="/admin?tab=catalog"
-              className="bg-white border border-slate-300 hover:border-slate-800 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-lg transition"
+              className="bg-white border border-slate-300 hover:border-slate-800 text-slate-700 text-xs font-semibold px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg transition"
             >
               Cancel
             </Link>
@@ -790,7 +790,7 @@ function NewProductContent() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold px-5 py-2.5 rounded-lg shadow-sm transition uppercase tracking-wider flex items-center gap-1.5"
+                className="bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg shadow-sm transition uppercase tracking-wider flex items-center gap-1.5"
               >
                 {isSubmitting ? (
                   <>
@@ -809,20 +809,20 @@ function NewProductContent() {
         </div>
 
         {/* Amazon / Flipkart 2-Step Flow Indicator Bar */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+        <div className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-3.5 sm:p-5 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 items-center">
             {/* Step 1 Pill */}
             <div
               onClick={() => setCurrentStep(1)}
-              className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition ${
+              className={`p-3 sm:p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition ${
                 currentStep === 1
                   ? "bg-slate-950 text-white border-slate-950 shadow-sm"
                   : "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400"
               }`}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                 <span
-                  className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
+                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
                     currentStep === 1
                       ? "bg-amber-400 text-slate-950"
                       : "bg-white text-slate-900 border border-slate-300"
@@ -830,16 +830,16 @@ function NewProductContent() {
                 >
                   1
                 </span>
-                <div>
+                <div className="min-w-0">
                   <span className={`text-[10px] font-bold uppercase tracking-wider block ${currentStep === 1 ? "text-amber-300" : "text-slate-400"}`}>
                     Classification Step
                   </span>
-                  <span className="font-bold text-xs sm:text-sm">
+                  <span className="font-bold text-xs sm:text-sm truncate block">
                     Select Jewelry Type &amp; Subcategory
                   </span>
                 </div>
               </div>
-              <span className="text-xl">{currentTypeDef.icon}</span>
+              <span className="text-lg sm:text-xl shrink-0 ml-2">{currentTypeDef.icon}</span>
             </div>
 
             {/* Step 2 Pill */}
@@ -847,15 +847,15 @@ function NewProductContent() {
               onClick={() => {
                 if (formCategory) setCurrentStep(2);
               }}
-              className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition ${
+              className={`p-3 sm:p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition ${
                 currentStep === 2
                   ? "bg-slate-950 text-white border-slate-950 shadow-sm"
                   : "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400"
               }`}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                 <span
-                  className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
+                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
                     currentStep === 2
                       ? "bg-amber-400 text-slate-950"
                       : "bg-white text-slate-900 border border-slate-300"
@@ -863,16 +863,16 @@ function NewProductContent() {
                 >
                   2
                 </span>
-                <div>
+                <div className="min-w-0">
                   <span className={`text-[10px] font-bold uppercase tracking-wider block ${currentStep === 2 ? "text-amber-300" : "text-slate-400"}`}>
                     Specification &amp; SEO Step
                   </span>
-                  <span className="font-bold text-xs sm:text-sm">
+                  <span className="font-bold text-xs sm:text-sm truncate block">
                     Define Details, Specs &amp; SEO Optimization
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5 text-xs font-mono font-bold">
+              <div className="flex items-center gap-1.5 text-xs font-mono font-bold shrink-0 ml-2">
                 <span className={`px-2 py-0.5 rounded-full ${seoScore >= 80 ? "bg-emerald-500 text-white" : "bg-amber-500 text-slate-950"}`}>
                   {seoScore}% SEO
                 </span>
@@ -886,13 +886,13 @@ function NewProductContent() {
         {/* ========================================================================= */}
         {currentStep === 1 && (
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 lg:p-8 space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 border-b border-slate-100 pb-4 sm:pb-5">
                 <div>
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-amber-800 block">
+                  <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-amber-800 block">
                     Product Classification Hierarchy
                   </span>
-                  <h2 className="text-xl font-bold text-slate-950">
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-950">
                     Step 1: What type of jewelry are you listing?
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
@@ -902,7 +902,7 @@ function NewProductContent() {
 
                 {/* Search Bar for Category Types */}
                 <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+                  <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
                   <input
                     type="text"
                     value={taxonomySearch}
@@ -913,15 +913,15 @@ function NewProductContent() {
                 </div>
               </div>
 
-              {/* Jewelry Types Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Jewelry Types Grid - Fully Responsive */}
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {filteredJewelryTypes.map((typeDef) => {
                   const isSelected = formCategory === typeDef.category;
                   return (
                     <div
                       key={typeDef.id}
                       onClick={() => handleSelectJewelryType(typeDef)}
-                      className={`relative rounded-2xl p-5 border-2 text-left cursor-pointer transition-all duration-200 flex flex-col justify-between ${
+                      className={`relative rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border-2 text-left cursor-pointer transition-all duration-200 flex flex-col justify-between ${
                         isSelected
                           ? "bg-slate-950 text-white border-slate-950 shadow-md ring-2 ring-amber-400/40"
                           : "bg-white text-slate-800 border-slate-200 hover:border-slate-400 hover:shadow-xs"
@@ -929,32 +929,32 @@ function NewProductContent() {
                     >
                       {/* Selected Badge */}
                       {isSelected && (
-                        <span className="absolute top-3.5 right-3.5 w-6 h-6 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-xs shadow-xs">
-                          <Check className="w-3.5 h-3.5" />
+                        <span className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-xs shadow-xs">
+                          <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                         </span>
                       )}
 
                       <div>
-                        <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl mb-3 shadow-inner">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-100 flex items-center justify-center text-xl sm:text-2xl mb-2.5 sm:mb-3 shadow-inner">
                           {typeDef.icon}
                         </div>
-                        <h3 className="font-serif-luxury text-base font-bold">
+                        <h3 className="text-sm sm:text-base font-bold">
                           {typeDef.title}
                         </h3>
-                        <p className={`text-xs mt-1.5 leading-relaxed ${isSelected ? "text-slate-300" : "text-slate-500"}`}>
+                        <p className={`text-[11px] sm:text-xs mt-1 leading-snug line-clamp-2 ${isSelected ? "text-slate-300" : "text-slate-500"}`}>
                           {typeDef.tagline}
                         </p>
                       </div>
 
-                      <div className="mt-4 pt-3 border-t border-slate-200/40">
-                        <span className={`text-[10px] font-bold uppercase tracking-wider block mb-1.5 ${isSelected ? "text-amber-300" : "text-slate-400"}`}>
-                          Unlocked Attributes:
+                      <div className="mt-3 pt-2.5 border-t border-slate-200/40">
+                        <span className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-wider block mb-1 ${isSelected ? "text-amber-300" : "text-slate-400"}`}>
+                          Attributes:
                         </span>
                         <div className="flex flex-wrap gap-1">
-                          {typeDef.specHighlights.slice(0, 3).map((spec, sIdx) => (
+                          {typeDef.specHighlights.slice(0, 2).map((spec, sIdx) => (
                             <span
                               key={sIdx}
-                              className={`text-[9px] font-medium px-2 py-0.5 rounded-full ${
+                              className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${
                                 isSelected ? "bg-white/10 text-slate-200" : "bg-slate-100 text-slate-600"
                               }`}
                             >
@@ -969,22 +969,22 @@ function NewProductContent() {
               </div>
 
               {/* Sub-type refinement selector */}
-              <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
-                <div className="flex items-center justify-between">
+              <div className="bg-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-slate-200 space-y-3">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
                       Refine {currentTypeDef.title} Sub-Type &amp; Design Style
                     </span>
-                    <h4 className="text-sm font-bold text-slate-900">
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900">
                       Choose {currentTypeDef.title} Silhouette / Setting:
                     </h4>
                   </div>
                   <span className="text-xs text-slate-500">
-                    Active Category: <strong className="text-slate-950">{formCategory}</strong>
+                    Active: <strong className="text-slate-950">{formCategory}</strong>
                   </span>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pt-1">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
                   {currentTypeDef.popularSubtypes.map((sub) => {
                     const isSubSelected = formSubType === sub;
                     return (
@@ -992,7 +992,7 @@ function NewProductContent() {
                         key={sub}
                         type="button"
                         onClick={() => setFormSubType(sub)}
-                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                        className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                           isSubSelected
                             ? "bg-slate-950 text-white shadow-sm ring-2 ring-amber-400/30"
                             : "bg-white text-slate-700 border border-slate-200 hover:border-slate-800"
@@ -1007,14 +1007,14 @@ function NewProductContent() {
               </div>
 
               {/* Proceed to Step 2 CTA */}
-              <div className="flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-slate-100 gap-4">
-                <div className="text-xs text-slate-500">
-                  Ready to configure <strong className="text-slate-900">{formCategory}{formSubType ? ` › ${formSubType}` : ""}</strong> technical specifications and SEO keywords.
+              <div className="flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-slate-100 gap-3 sm:gap-4">
+                <div className="text-xs text-slate-500 text-center sm:text-left">
+                  Ready to configure <strong className="text-slate-900">{formCategory}{formSubType ? ` › ${formSubType}` : ""}</strong> specifications and wholesale pricing.
                 </div>
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="w-full sm:w-auto bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider px-8 py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 group"
+                  className="w-full sm:w-auto bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 group"
                 >
                   <span>Continue to Step 2: Define Details &amp; SEO</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -1028,20 +1028,20 @@ function NewProductContent() {
         {/* STEP 2: DYNAMIC DETAILS DEFINED BASED ON JEWELRY TYPE + SEO STUDIO        */}
         {/* ========================================================================= */}
         {currentStep === 2 && (
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
             {/* LEFT COLUMN: Technical Specifications, Identification & SEO (8 cols) */}
             <div className="lg:col-span-8 space-y-6">
               {/* Type Confirmation Bar */}
-              <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white rounded-2xl p-5 shadow-sm border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-xl bg-amber-400/20 text-amber-300 text-2xl flex items-center justify-center border border-amber-400/30">
+              <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-400/20 text-amber-300 text-xl sm:text-2xl flex items-center justify-center border border-amber-400/30 shrink-0">
                     {currentTypeDef.icon}
                   </div>
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 block">
                       Active Jewelry Classification
                     </span>
-                    <h3 className="font-serif-luxury text-lg font-bold text-white flex items-center gap-2">
+                    <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
                       <span>{formCategory}</span>
                       {formSubType ? (
                         <>
@@ -1055,11 +1055,11 @@ function NewProductContent() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap w-full sm:w-auto items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setCurrentStep(1)}
-                    className="text-xs text-slate-300 hover:text-white font-semibold px-3 py-1.5 rounded-lg border border-slate-700 hover:border-slate-500 transition flex items-center gap-1.5"
+                    className="flex-1 sm:flex-initial text-xs text-slate-300 hover:text-white font-semibold px-3 py-2 rounded-lg border border-slate-700 hover:border-slate-500 transition flex items-center justify-center gap-1.5"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Change Type</span>
@@ -1068,42 +1068,67 @@ function NewProductContent() {
                   <button
                     type="button"
                     onClick={handleAutoGenerateSEO}
-                    className="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black px-4 py-2 rounded-lg transition shadow-sm flex items-center gap-1.5"
+                    className="flex-1 sm:flex-initial bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black px-3.5 py-2 rounded-lg transition shadow-sm flex items-center justify-center gap-1.5"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Auto-Fill SEO Listing</span>
+                    <span>Auto-Fill SEO</span>
                   </button>
                 </div>
               </div>
 
+              {/* Quick Section Jump Navigation Strip */}
+              <div className="bg-white rounded-xl border border-slate-200 p-2 shadow-2xs overflow-x-auto no-scrollbar flex items-center gap-1.5 text-xs font-semibold">
+                <a href="#section-specs" className="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 whitespace-nowrap transition">
+                  1. Specs
+                </a>
+                <a href="#section-stones" className="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 whitespace-nowrap transition">
+                  2. Stones
+                </a>
+                <a href="#section-metal" className="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 whitespace-nowrap transition">
+                  3. Metal &amp; Weight
+                </a>
+                <a href="#section-photos" className="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 whitespace-nowrap transition">
+                  4. Photos ({productImages.length})
+                </a>
+                <a href="#section-seo" className="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 whitespace-nowrap transition">
+                  5. SEO Studio
+                </a>
+                <a href="#section-pricing" className="lg:hidden px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 whitespace-nowrap transition">
+                  6. Pricing &amp; MOQ
+                </a>
+                <a href="#section-supplier" className="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-950 whitespace-nowrap transition">
+                  7. Supplier (Private)
+                </a>
+              </div>
+
               {/* Notification Banner */}
               {seoNotification && (
-                <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-xl p-3.5 text-xs font-bold flex items-center gap-2 animate-fade-in shadow-xs">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-xl p-3 sm:p-3.5 text-xs font-bold flex items-center gap-2 animate-fade-in shadow-xs">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>{seoNotification}</span>
                 </div>
               )}
 
               {/* Section 1: Dynamic Jewelry Type-Specific Specifications */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                  <h2 className="font-serif-luxury text-base font-bold text-slate-950 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-mono font-bold">1</span>
-                    <span>{formCategory} Type-Specific Specifications (Amazon / Flipkart Attribute Schema)</span>
+              <div id="section-specs" className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4 scroll-mt-24">
+                <div className="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-sm sm:text-base font-bold text-slate-950 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-bold">1</span>
+                    <span>{formCategory} Specifications (Amazon / Flipkart Attribute Schema)</span>
                   </h2>
-                  <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-semibold border border-amber-200">
+                  <span className="text-[10px] sm:text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-semibold border border-amber-200">
                     Dynamic Schema
                   </span>
                 </div>
 
                 {/* Conditional Fields: RINGS */}
                 {formCategory === "Rings" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                     <div className="sm:col-span-2">
                       <label className="font-bold text-slate-800 block mb-1">
                         Available Ring Sizes (US Standards) *
                       </label>
-                      <div className="flex flex-wrap gap-2 mb-2">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-2">
                         {["US 5", "US 6", "US 7", "US 8", "US 9", "US 10", "US 11", "US 12", "Free-Size Adjustable"].map((sz) => {
                           const isPicked = formRingSizes.includes(sz);
                           return (
@@ -1114,7 +1139,7 @@ function NewProductContent() {
                                 if (isPicked) setFormRingSizes(formRingSizes.filter((s) => s !== sz));
                                 else setFormRingSizes([...formRingSizes, sz]);
                               }}
-                              className={`px-3 py-1.5 rounded-lg font-bold transition text-xs ${
+                              className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition text-xs ${
                                 isPicked
                                   ? "bg-slate-950 text-white shadow-xs"
                                   : "bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -1137,7 +1162,7 @@ function NewProductContent() {
                         value={formBandWidth}
                         onChange={(e) => setFormBandWidth(e.target.value)}
                         placeholder="e.g. 2.2mm, 4.0mm"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
 
@@ -1146,7 +1171,7 @@ function NewProductContent() {
                       <select
                         value={formSettingType}
                         onChange={(e) => setFormSettingType(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
                         <option value="">-- Select Setting Type --</option>
                         <option value="4-Prong Setting">4-Prong Setting (Solitaire)</option>
@@ -1164,7 +1189,7 @@ function NewProductContent() {
                       <select
                         value={formRingSizingType}
                         onChange={(e) => setFormRingSizingType(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
                         <option value="">-- Select Sizing Mechanism --</option>
                         <option value="Standard Fixed Sizes">Standard Fixed Sizes</option>
@@ -1177,7 +1202,7 @@ function NewProductContent() {
 
                 {/* Conditional Fields: PENDANTS */}
                 {formCategory === "Pendants" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                     <div>
                       <label className="font-bold text-slate-800 block mb-1">Pendant Height (mm)</label>
                       <input
@@ -1185,7 +1210,7 @@ function NewProductContent() {
                         value={formPendantHeight}
                         onChange={(e) => setFormPendantHeight(e.target.value)}
                         placeholder="e.g. 18mm, 24mm"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
 
@@ -1196,7 +1221,7 @@ function NewProductContent() {
                         value={formPendantWidth}
                         onChange={(e) => setFormPendantWidth(e.target.value)}
                         placeholder="e.g. 12mm, 15mm"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
 
@@ -1209,7 +1234,7 @@ function NewProductContent() {
                         value={formBailOpening}
                         onChange={(e) => setFormBailOpening(e.target.value)}
                         placeholder="e.g. 4.2mm (Fits up to 3.5mm Chains)"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                       <p className="text-[10px] text-slate-400 mt-1">Retailers must know what chain thickness will fit.</p>
                     </div>
@@ -1219,7 +1244,7 @@ function NewProductContent() {
                       <select
                         value={formChainInclusion}
                         onChange={(e) => setFormChainInclusion(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
                         <option value="">-- Select Chain Option --</option>
                         <option value="Pendant Only (Chain Sold Separately)">Pendant Only (Chain Sold Separately)</option>
@@ -1232,7 +1257,7 @@ function NewProductContent() {
 
                 {/* Conditional Fields: BRACELETS */}
                 {formCategory === "Bracelets" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                     <div>
                       <label className="font-bold text-slate-800 block mb-1">Wrist Length (Inches / cm)</label>
                       <input
@@ -1240,7 +1265,7 @@ function NewProductContent() {
                         value={formBraceletLength}
                         onChange={(e) => setFormBraceletLength(e.target.value)}
                         placeholder="e.g. 7.25 inches (18.5cm)"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
 
@@ -1249,7 +1274,7 @@ function NewProductContent() {
                       <select
                         value={formClaspType}
                         onChange={(e) => setFormClaspType(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
                         <option value="">-- Select Clasp Mechanism --</option>
                         <option value="Box Clasp with Dual Safety Latches">Box Clasp with Dual Safety Latches (Tennis Style)</option>
@@ -1267,7 +1292,7 @@ function NewProductContent() {
                         value={formLinkStyle}
                         onChange={(e) => setFormLinkStyle(e.target.value)}
                         placeholder="e.g. 4-Prong Tennis Link, Paperclip Chain, Cuban Curb"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
                   </div>
@@ -1275,13 +1300,13 @@ function NewProductContent() {
 
                 {/* Conditional Fields: NECKLACES */}
                 {formCategory === "Necklaces" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                     <div>
                       <label className="font-bold text-slate-800 block mb-1">Necklace Drop Length</label>
                       <select
                         value={formNecklaceLength}
                         onChange={(e) => setFormNecklaceLength(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
                         <option value="">-- Select Drop Length --</option>
                         <option value="14 inches (Choker Length)">14 inches (Choker Length)</option>
@@ -1300,7 +1325,7 @@ function NewProductContent() {
                         value={formChainType}
                         onChange={(e) => setFormChainType(e.target.value)}
                         placeholder="e.g. Cable Link, Box Chain, Tennis Setting"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
                   </div>
@@ -1308,13 +1333,13 @@ function NewProductContent() {
 
                 {/* Conditional Fields: BANGLES */}
                 {formCategory === "Bangles" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                     <div>
                       <label className="font-bold text-slate-800 block mb-1">Bangle Size / Inner Diameter</label>
                       <select
                         value={formBangleSize}
                         onChange={(e) => setFormBangleSize(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
                         <option value="">-- Select Bangle Sizing --</option>
                         <option value="2.2 (54.0mm Inner Diameter)">2.2 (54.0mm Inner Diameter)</option>
@@ -1331,7 +1356,7 @@ function NewProductContent() {
                       <select
                         value={formClosureType}
                         onChange={(e) => setFormClosureType(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
                         <option value="">-- Select Closure Mechanism --</option>
                         <option value="Hinged with Hidden Safety Lock">Hinged with Hidden Safety Lock</option>
@@ -1341,14 +1366,14 @@ function NewProductContent() {
                       </select>
                     </div>
 
-                    <div>
+                    <div className="sm:col-span-2">
                       <label className="font-bold text-slate-800 block mb-1">Bangle Width / Profile (mm)</label>
                       <input
                         type="text"
                         value={formBangleWidth}
                         onChange={(e) => setFormBangleWidth(e.target.value)}
                         placeholder="e.g. 4.5mm Wire, 8mm Mid, 15mm Broad Kada"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
                   </div>
@@ -1356,13 +1381,13 @@ function NewProductContent() {
 
                 {/* Conditional Fields: EARRINGS */}
                 {formCategory === "Earrings" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                     <div>
                       <label className="font-bold text-slate-800 block mb-1">Fastener / Back Finding</label>
                       <select
                         value={formEarringBacking}
                         onChange={(e) => setFormEarringBacking(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       >
                         <option value="">-- Select Back Finding --</option>
                         <option value="Push Back (Butterfly Friction)">Push Back (Butterfly Friction)</option>
@@ -1380,7 +1405,7 @@ function NewProductContent() {
                         value={formEarringDrop}
                         onChange={(e) => setFormEarringDrop(e.target.value)}
                         placeholder="e.g. 12mm Stud, 25mm Drop, 50mm Chandelier"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
                   </div>
@@ -1388,7 +1413,7 @@ function NewProductContent() {
 
                 {/* Conditional Fields: CHAINS */}
                 {formCategory === "Chains" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                     <div>
                       <label className="font-bold text-slate-800 block mb-1">Weave Pattern</label>
                       <input
@@ -1396,7 +1421,7 @@ function NewProductContent() {
                         value={formChainWeave}
                         onChange={(e) => setFormChainWeave(e.target.value)}
                         placeholder="e.g. Diamond-Cut Curb, Figaro 3+1, Rope, Franco"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
 
@@ -1407,7 +1432,7 @@ function NewProductContent() {
                         value={formChainGauge}
                         onChange={(e) => setFormChainGauge(e.target.value)}
                         placeholder="e.g. 1.5mm, 3.0mm, 5.5mm, 8.0mm"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                       />
                     </div>
                   </div>
@@ -1415,24 +1440,24 @@ function NewProductContent() {
               </div>
 
               {/* Section 2: Gemstone & Stone Details (Flipkart / Amazon Jewelry Standards) */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                  <h2 className="font-serif-luxury text-base font-bold text-slate-950 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-mono font-bold">2</span>
+              <div id="section-stones" className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4 scroll-mt-24">
+                <div className="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-sm sm:text-base font-bold text-slate-950 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-bold">2</span>
                     <span>Gemstone &amp; Stone Specifications</span>
                   </h2>
-                  <span className="text-[11px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded font-semibold border border-purple-200">
+                  <span className="text-[10px] sm:text-[11px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded font-semibold border border-purple-200">
                     Boutique Cut &amp; Clarity
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-xs">
                   <div>
                     <label className="font-bold text-slate-800 block mb-1">Gemstone Type</label>
                     <select
                       value={formGemstoneType}
                       onChange={(e) => setFormGemstoneType(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                     >
                       <option value="">-- Select Gemstone Type --</option>
                       <option value="Plain Solid Silver (No Stone)">Plain Solid Silver (No Stone)</option>
@@ -1449,7 +1474,7 @@ function NewProductContent() {
                     <select
                       value={formStoneCut}
                       onChange={(e) => setFormStoneCut(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                     >
                       <option value="">-- Select Stone Cut / Shape --</option>
                       <option value="Round Brilliant Cut">Round Brilliant Cut (58 Facets)</option>
@@ -1470,7 +1495,7 @@ function NewProductContent() {
                       value={formCaratWeight}
                       onChange={(e) => setFormCaratWeight(e.target.value)}
                       placeholder="e.g. 1.25 CTW, 0.50 CTW"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                     />
                   </div>
 
@@ -1481,7 +1506,7 @@ function NewProductContent() {
                       value={formStoneColor}
                       onChange={(e) => setFormStoneColor(e.target.value)}
                       placeholder="e.g. D-E-F Flawless White, Emerald Green"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                     />
                   </div>
 
@@ -1496,25 +1521,25 @@ function NewProductContent() {
                         setFormStoneCount(val === "" ? "" : parseInt(val, 10));
                       }}
                       placeholder="e.g. 1 center stone, 24 pave"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:border-slate-950"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Section 3: Precious Metal, Purity & Weight */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                  <h2 className="font-serif-luxury text-base font-bold text-slate-950 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-mono font-bold">3</span>
+              <div id="section-metal" className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4 scroll-mt-24">
+                <div className="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-sm sm:text-base font-bold text-slate-950 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-bold">3</span>
                     <span>Precious Metal, Fineness &amp; Physical Specifications</span>
                   </h2>
-                  <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-semibold border border-amber-200">
+                  <span className="text-[10px] sm:text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-semibold border border-amber-200">
                     UK Assay &amp; BIS 925
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                   <div>
                     <label className="font-bold text-slate-800 block mb-1">Metal Purity *</label>
                     <input
@@ -1523,9 +1548,9 @@ function NewProductContent() {
                       value={formPurity}
                       onChange={(e) => setFormPurity(e.target.value)}
                       placeholder="Solid 925 Sterling Silver"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950 font-medium"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-slate-950 font-medium"
                     />
-                    <p className="text-[11px] text-slate-400 mt-1">Virgin 925/1000 millesimal fineness guaranteed.</p>
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1">Virgin 925/1000 millesimal fineness guaranteed.</p>
                   </div>
 
                   <div>
@@ -1538,9 +1563,9 @@ function NewProductContent() {
                       value={formGramWeight}
                       onChange={(e) => setFormGramWeight(e.target.value)}
                       placeholder="e.g. 4.8g"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono font-bold focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-mono font-bold focus:outline-none focus:border-slate-950"
                     />
-                    <p className="text-[11px] text-slate-400 mt-1">
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1">
                       Typical range for {formCategory}: {currentTypeDef.typicalWeightRange}
                     </p>
                   </div>
@@ -1553,7 +1578,7 @@ function NewProductContent() {
                       value={formFinish}
                       onChange={(e) => setFormFinish(e.target.value)}
                       placeholder="e.g. Anti-Tarnish Rhodium Plating & E-Coating"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-slate-950"
                     />
                   </div>
 
@@ -1565,23 +1590,23 @@ function NewProductContent() {
                       value={formDimensions}
                       onChange={(e) => setFormDimensions(e.target.value)}
                       placeholder="e.g. Band: 2.2mm | US 6, 7, 8 | 4-Prong Setting"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-slate-950"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-100 transition">
+                    <label className="flex items-start gap-3 p-3 sm:p-3.5 bg-slate-50 border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-100 transition">
                       <input
                         type="checkbox"
                         checked={formHallmarked}
                         onChange={(e) => setFormHallmarked(e.target.checked)}
-                        className="w-4 h-4 rounded text-slate-950 focus:ring-slate-950"
+                        className="w-4 h-4 rounded text-slate-950 focus:ring-slate-950 mt-0.5 shrink-0"
                       />
                       <div>
                         <span className="font-bold text-slate-900 block text-xs">
                           UK Assay Office Hallmarking Certified (London / Birmingham / BIS 925)
                         </span>
-                        <span className="text-[11px] text-slate-500 block">
+                        <span className="text-[11px] text-slate-500 block mt-0.5 leading-relaxed">
                           Features official UK hallmark stamp and sponsor mark, legally required for silver items over 7.78g.
                         </span>
                       </div>
@@ -1591,13 +1616,13 @@ function NewProductContent() {
               </div>
 
               {/* Section 4: High-Resolution Jewelry Photography */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-mono font-bold">4</span>
+              <div id="section-photos" className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4 scroll-mt-24">
+                <div className="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-bold">4</span>
                     <span>Jewelry Photography &amp; Visual Media</span>
                   </h2>
-                  <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold border border-emerald-200 inline-flex items-center gap-1">
+                  <span className="text-[10px] sm:text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold border border-emerald-200 inline-flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     Supabase Storage Linked
                   </span>
@@ -1617,7 +1642,7 @@ function NewProductContent() {
                       setIsDragging(false);
                       handleFileUpload(e.dataTransfer.files);
                     }}
-                    className={`border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer transition flex flex-col items-center justify-center gap-3 ${
+                    className={`border-2 border-dashed rounded-xl p-4 sm:p-6 md:p-8 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2.5 sm:gap-3 ${
                       isDragging
                         ? "border-slate-900 bg-slate-100/80 ring-2 ring-slate-900/10"
                         : "border-slate-300 hover:border-slate-700 bg-slate-50/50 hover:bg-slate-50"
@@ -1632,11 +1657,11 @@ function NewProductContent() {
                       onChange={(e) => handleFileUpload(e.target.files)}
                     />
 
-                    <div className="w-12 h-12 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-700">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-700">
                       {isUploading ? (
-                        <Loader2 className="w-6 h-6 animate-spin text-slate-900" />
+                        <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin text-slate-900" />
                       ) : (
-                        <Upload className="w-6 h-6" />
+                        <Upload className="w-5 h-5 sm:w-6 sm:h-6" />
                       )}
                     </div>
 
@@ -1646,12 +1671,12 @@ function NewProductContent() {
                           ? "Uploading photo to Supabase storage..."
                           : "Click to browse or drag & drop high-res jewelry photos"}
                       </p>
-                      <p className="text-[11px] text-slate-500 mt-1">
+                      <p className="text-[10px] sm:text-[11px] text-slate-500 mt-1">
                         Stored in Supabase Storage bucket &bull; PNG, JPG, WEBP up to 10MB
                       </p>
                     </div>
 
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white shadow-xs hover:bg-slate-800 transition">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-semibold bg-slate-900 text-white shadow-xs hover:bg-slate-800 transition">
                       <Plus className="w-3.5 h-3.5" />
                       <span>Select Images from Computer</span>
                     </span>
@@ -1665,15 +1690,15 @@ function NewProductContent() {
                 {/* Uploaded Photos Gallery */}
                 {productImages.length > 0 && (
                   <div className="pt-2">
-                    <div className="flex items-center justify-between mb-2.5">
+                    <div className="flex flex-wrap items-center justify-between gap-1 mb-2.5">
                       <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                         <ImageIcon className="w-3.5 h-3.5 text-slate-500" />
                         Attached Product Images ({productImages.length})
                       </span>
-                      <span className="text-[11px] text-slate-500">First photo is the primary catalog thumbnail</span>
+                      <span className="text-[10px] sm:text-[11px] text-slate-500">First photo is catalog thumbnail</span>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3">
                       {productImages.map((imgUrl, idx) => (
                         <div
                           key={idx}
@@ -1692,20 +1717,20 @@ function NewProductContent() {
                           />
 
                           {idx === 0 && (
-                            <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                              <Star className="w-2.5 h-2.5 fill-slate-950" /> Primary
+                            <span className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 px-1 sm:px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-[8px] sm:text-[9px] uppercase tracking-wider flex items-center gap-0.5 sm:gap-1 shadow-sm">
+                              <Star className="w-2 sm:w-2.5 h-2 sm:h-2.5 fill-slate-950" /> Primary
                             </span>
                           )}
 
-                          <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-2">
+                          <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-1.5 sm:p-2">
                             <div className="flex justify-end">
                               <button
                                 type="button"
                                 onClick={() => handleRemoveImage(idx)}
                                 title="Delete photo"
-                                className="p-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition"
+                                className="p-1 sm:p-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition"
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                <Trash2 className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
                               </button>
                             </div>
 
@@ -1713,9 +1738,9 @@ function NewProductContent() {
                               <button
                                 type="button"
                                 onClick={() => handleSetPrimary(idx)}
-                                className="w-full py-1 px-1.5 rounded bg-white/90 hover:bg-white text-slate-900 font-semibold text-[10px] shadow-xs transition"
+                                className="w-full py-1 px-1 rounded bg-white/90 hover:bg-white text-slate-900 font-semibold text-[9px] sm:text-[10px] shadow-xs transition truncate"
                               >
-                                Set as Primary
+                                Set Primary
                               </button>
                             )}
                           </div>
@@ -1761,12 +1786,12 @@ function NewProductContent() {
                 </div>
               </div>
 
-              {/* Section 5: Flipkart & Amazon SEO Listing Studio ("Don't forget to make details SEO friendly") */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
-                <div className="border-b border-slate-100 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              {/* Section 5: Flipkart & Amazon SEO Listing Studio */}
+              <div id="section-seo" className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4 sm:space-y-5 scroll-mt-24">
+                <div className="border-b border-slate-100 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 sm:gap-3">
                   <div>
-                    <h2 className="font-serif-luxury text-base font-bold text-slate-950 flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-mono font-bold">5</span>
+                    <h2 className="text-sm sm:text-base font-bold text-slate-950 flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-bold">5</span>
                       <span>SEO &amp; Marketplace Listing Studio</span>
                     </h2>
                     <p className="text-[11px] text-slate-500 mt-0.5">
@@ -1777,7 +1802,7 @@ function NewProductContent() {
                   <button
                     type="button"
                     onClick={handleAutoGenerateSEO}
-                    className="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black px-4 py-2 rounded-lg transition shadow-sm flex items-center gap-1.5 flex-shrink-0"
+                    className="w-full sm:w-auto bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black px-4 py-2 rounded-lg transition shadow-sm flex items-center justify-center gap-1.5 shrink-0"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>Auto-Generate SEO Listing</span>
@@ -1785,7 +1810,7 @@ function NewProductContent() {
                 </div>
 
                 {/* SEO Health Audit Card */}
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 sm:p-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                       <Award className="w-4 h-4 text-amber-500" />
@@ -1806,7 +1831,7 @@ function NewProductContent() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 text-[10px] text-slate-600">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 mt-3 text-[10px] sm:text-[11px] text-slate-600">
                     <span className="flex items-center gap-1">
                       {formName.length >= 35 ? "✅" : "⚪"} Title (35-90 chars)
                     </span>
@@ -1829,7 +1854,7 @@ function NewProductContent() {
                       SEO Optimized Product Title *
                     </label>
                     <span className="text-[10px] text-slate-400 font-mono">
-                      {formName.length} / 90 chars (Recommended: 40-70)
+                      {formName.length} / 90 chars
                     </span>
                   </div>
                   <input
@@ -1842,13 +1867,13 @@ function NewProductContent() {
                   />
                 </div>
 
-                {/* SEO URL Slug */}
+                {/* SEO URL Slug - Responsive Stacking */}
                 <div>
                   <label className="font-bold text-slate-800 text-xs block mb-1">
                     URL Slug (Canonical Search Engine Handle) *
                   </label>
-                  <div className="flex items-center bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-xs">
-                    <span className="text-slate-400 font-mono text-[11px] whitespace-nowrap">
+                  <div className="flex flex-col sm:flex-row sm:items-stretch bg-slate-50 border border-slate-300 rounded-lg overflow-hidden focus-within:border-slate-950">
+                    <span className="bg-slate-100 text-slate-500 font-mono text-[10px] sm:text-[11px] px-2.5 py-1.5 sm:py-2 border-b sm:border-b-0 sm:border-r border-slate-200 select-none truncate">
                       argentsilverwholesale.com/product/
                     </span>
                     <input
@@ -1856,7 +1881,7 @@ function NewProductContent() {
                       value={formSlug}
                       onChange={(e) => setFormSlug(e.target.value)}
                       placeholder="solid-925-sterling-silver-solitaire-ring"
-                      className="w-full bg-transparent text-slate-900 font-mono font-bold focus:outline-none ml-1"
+                      className="w-full bg-transparent text-slate-900 font-mono font-bold text-xs p-2 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -1865,7 +1890,7 @@ function NewProductContent() {
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="font-bold text-slate-800 text-xs">
-                      Amazon / Flipkart 5 Key Product Feature Bullets (&quot;About this item&quot;)
+                      Amazon / Flipkart 5 Key Feature Bullets (&quot;About this item&quot;)
                     </label>
                     <button
                       type="button"
@@ -1882,7 +1907,7 @@ function NewProductContent() {
                       <p className="text-xs text-slate-500">
                         No feature bullets added yet. Leave blank, type custom points, or auto-generate with 1-click.
                       </p>
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex flex-wrap items-center justify-center gap-2">
                         <button
                           type="button"
                           onClick={() => setFormKeyBullets([""])}
@@ -1905,7 +1930,7 @@ function NewProductContent() {
                     <div className="space-y-2">
                       {formKeyBullets.map((bullet, bIdx) => (
                         <div key={bIdx} className="flex gap-2 items-start">
-                          <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 font-mono text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-2">
+                          <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-2">
                             {bIdx + 1}
                           </span>
                           <textarea
@@ -1925,9 +1950,9 @@ function NewProductContent() {
                               setFormKeyBullets((prev) => prev.filter((_, idx) => idx !== bIdx));
                             }}
                             title="Remove bullet"
-                            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition mt-1"
+                            className="p-1.5 sm:p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition mt-1"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                           </button>
                         </div>
                       ))}
@@ -1977,7 +2002,7 @@ function NewProductContent() {
                 </div>
 
                 {/* Live Google Search Preview (SERP Card) */}
-                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs space-y-1 text-left">
+                <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 shadow-2xs space-y-1 text-left overflow-hidden">
                   <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider flex items-center gap-1">
                     <Globe className="w-3 h-3 text-slate-400" /> Google Search Result Preview
                   </span>
@@ -1998,25 +2023,25 @@ function NewProductContent() {
               </div>
 
               {/* Section 6: Private Sourcing & Supplier Details (Confidential / Internal Admin Only - Strictly No SEO) */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                  <h2 className="font-serif-luxury text-base font-bold text-slate-950 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-purple-900 text-white text-xs flex items-center justify-center font-mono font-bold">6</span>
+              <div id="section-supplier" className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4 scroll-mt-24">
+                <div className="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-sm sm:text-base font-bold text-slate-950 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-purple-900 text-white text-xs flex items-center justify-center font-bold">6</span>
                     <span>Supplier Details &amp; Sourcing (Private Admin Only)</span>
                   </h2>
-                  <span className="text-[11px] text-purple-800 bg-purple-50 px-2.5 py-0.5 rounded-full font-semibold border border-purple-200 inline-flex items-center gap-1">
+                  <span className="text-[10px] sm:text-[11px] text-purple-800 bg-purple-50 px-2.5 py-0.5 rounded-full font-semibold border border-purple-200 inline-flex items-center gap-1">
                     <Lock className="w-3 h-3 text-purple-700" /> Private &bull; Strictly No SEO
                   </span>
                 </div>
 
                 <div className="bg-purple-50/70 border border-purple-200/80 rounded-xl p-3 text-[11px] text-purple-950 flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-purple-700 flex-shrink-0 mt-0.5" />
+                  <ShieldCheck className="w-4 h-4 text-purple-700 shrink-0 mt-0.5" />
                   <p className="leading-relaxed">
                     <strong className="font-semibold text-purple-900">Confidential Sourcing Information:</strong> This section is strictly private to store administrators for procurement, reordering, and margin management. It is <strong>never displayed</strong> on the public storefront, hidden from wholesale buyer accounts, and completely excluded from search engine crawlers and SEO metadata.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                   <div>
                     <label className="font-bold text-slate-800 block mb-1">Supplier Name</label>
                     <input
@@ -2024,7 +2049,7 @@ function NewProductContent() {
                       value={formSupplierName}
                       onChange={(e) => setFormSupplierName(e.target.value)}
                       placeholder="e.g. Arezzo Silver SpA, Bangkok Gems Ltd"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-slate-950"
                     />
                   </div>
 
@@ -2035,7 +2060,7 @@ function NewProductContent() {
                       value={formSupplierProductCode}
                       onChange={(e) => setFormSupplierProductCode(e.target.value)}
                       placeholder="e.g. SUP-RNG-8821, IT-925-042"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 font-mono focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-mono focus:outline-none focus:border-slate-950"
                     />
                   </div>
 
@@ -2059,7 +2084,7 @@ function NewProductContent() {
                       value={formSupplierProductLink}
                       onChange={(e) => setFormSupplierProductLink(e.target.value)}
                       placeholder="e.g. https://supplier-portal.com/catalog/item/8821"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-slate-950"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-slate-950"
                     />
                   </div>
 
@@ -2077,7 +2102,7 @@ function NewProductContent() {
                           setFormSupplierPrice(val === "" ? "" : parseFloat(val));
                         }}
                         placeholder="0.00"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 text-slate-900 font-bold focus:outline-none focus:border-slate-950"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 text-xs text-slate-900 font-bold focus:outline-none focus:border-slate-950"
                       />
                     </div>
                   </div>
@@ -2088,7 +2113,7 @@ function NewProductContent() {
                         Internal Sourcing Gross Spread
                       </span>
                       <div className="flex items-baseline justify-between mt-1">
-                        <span className="text-base font-extrabold text-purple-950">
+                        <span className="text-base font-extrabold text-purple-950 font-mono">
                           +£{(formPriceGBP - formSupplierPrice).toFixed(2)} / unit
                         </span>
                         <span className="text-xs font-bold text-purple-800">
@@ -2102,10 +2127,10 @@ function NewProductContent() {
             </div>
 
             {/* RIGHT COLUMN: Wholesale Commercials, Margins & Actions (4 cols) */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-4 space-y-5 lg:sticky lg:top-24 self-start">
               {/* Card: Wholesale Pricing & Margin Calculator */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <h3 className="font-serif-luxury text-base font-bold text-slate-950 border-b border-slate-100 pb-2">
+              <div id="section-pricing" className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4 scroll-mt-24">
+                <h3 className="text-sm sm:text-base font-bold text-slate-950 border-b border-slate-100 pb-2">
                   Wholesale Pricing &amp; Margins
                 </h3>
 
@@ -2210,8 +2235,8 @@ function NewProductContent() {
               </div>
 
               {/* Card: Warehouse Inventory & MOQ */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <h3 className="font-serif-luxury text-base font-bold text-slate-950 border-b border-slate-100 pb-2">
+              <div id="section-inventory" className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4 scroll-mt-24">
+                <h3 className="text-sm sm:text-base font-bold text-slate-950 border-b border-slate-100 pb-2">
                   Inventory Logistics &amp; MOQ
                 </h3>
 
@@ -2294,12 +2319,12 @@ function NewProductContent() {
               </div>
 
               {/* Card: Action Panel */}
-              <div className="bg-slate-950 text-white rounded-2xl p-6 shadow-md space-y-4">
+              <div className="bg-slate-950 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md space-y-4">
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block mb-1">
                     Ready to Publish
                   </span>
-                  <h4 className="font-serif-luxury text-lg font-bold">
+                  <h4 className="text-base sm:text-lg font-bold">
                     {isEditing ? "Update Wholesale Listing" : "Publish to Trade Catalog"}
                   </h4>
                   <p className="text-xs text-slate-400 mt-1 leading-relaxed">
@@ -2336,6 +2361,41 @@ function NewProductContent() {
               </div>
             </div>
           </form>
+        )}
+
+        {/* Mobile Sticky Bottom Action Bar - Always Accessible on Phones & Tablets */}
+        {currentStep === 2 && (
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3.5 py-2.5 shadow-lg flex items-center justify-between gap-2.5">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Wholesale</span>
+              <span className="text-sm font-extrabold text-slate-950 font-mono truncate">
+                {formPriceGBP !== "" ? `£${Number(formPriceGBP).toFixed(2)}` : "£0.00"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${seoScore >= 80 ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-900"}`}>
+                {seoScore}% SEO
+              </span>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black px-4 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{isEditing ? "Save" : "Publish"}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

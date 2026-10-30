@@ -8,20 +8,36 @@
     --gold-accent: #B4975A;
   }
 
+  html,
   body {
     background-color: #FDFDFD;
     color: #1E293B;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+    font-feature-settings: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom luxury fonts styling */
+  /* Force clean, simple Arial font throughout entire application */
+  *,
+  button,
+  input,
+  optgroup,
+  select,
+  textarea,
+  h1, h2, h3, h4, h5, h6,
+  p, span, a, label, strong, b, em, i, td, th {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+  }
+
+  /* Custom fonts styling - mapped to Arial */
   .font-serif-luxury {
-    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-    letter-spacing: -0.015em;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+    letter-spacing: normal !important;
   }
 
   .font-sans-clean {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
   }
 }
 
