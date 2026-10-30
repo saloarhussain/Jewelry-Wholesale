@@ -154,7 +154,17 @@ export default function ProductDetailClient({
             <div className="lg:col-span-6 space-y-6">
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
-                  <span className="font-mono text-slate-400">SKU: {product.sku}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-slate-400">SKU: {product.sku}</span>
+                    <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                      {product.category} {product.subType ? `› ${product.subType}` : ""}
+                    </span>
+                    {product.badge && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300">
+                        {product.badge}
+                      </span>
+                    )}
+                  </div>
                   <span className="text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
                     In Stock ({product.stockCount} units available)
                   </span>
@@ -164,9 +174,26 @@ export default function ProductDetailClient({
                   {product.name}
                 </h1>
 
-                <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed whitespace-pre-line">
                   {product.description}
                 </p>
+
+                {/* Amazon / Flipkart Style Key Product Feature Bullets */}
+                {product.bulletPoints && product.bulletPoints.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-slate-100">
+                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
+                      Key Product Highlights (About This Piece):
+                    </h4>
+                    <ul className="space-y-1.5 text-xs text-slate-600 leading-relaxed">
+                      {product.bulletPoints.map((bullet, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="text-amber-500 font-bold flex-shrink-0">•</span>
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
               {/* Wholesale Pricing vs Retail Margin Breakdown */}
@@ -448,8 +475,75 @@ export default function ProductDetailClient({
                     <dd className="font-semibold text-slate-800">{product.finish}</dd>
                   </div>
                   <div className="border-b border-slate-100 pb-1.5">
-                    <dt className="text-slate-400">Dimensions</dt>
+                    <dt className="text-slate-400">Dimensions &amp; Fit</dt>
                     <dd className="font-semibold text-slate-800">{product.dimensions}</dd>
+                  </div>
+
+                  {product.gemstoneType && product.gemstoneType !== "Plain Solid Silver (No Stone)" && (
+                    <div className="border-b border-slate-100 pb-1.5">
+                      <dt className="text-slate-400">Gemstone &amp; Cut</dt>
+                      <dd className="font-semibold text-slate-800">
+                        {product.gemstoneType} {product.stoneCut ? `(${product.stoneCut})` : ""}
+                      </dd>
+                    </div>
+                  )}
+
+                  {(product.caratWeight || product.stoneCount != null) && (
+                    <div className="border-b border-slate-100 pb-1.5">
+                      <dt className="text-slate-400">Carat Weight / Count</dt>
+                      <dd className="font-semibold text-slate-800">
+                        {product.caratWeight || ""} {product.stoneCount != null ? `• ${product.stoneCount} stones` : ""}
+                      </dd>
+                    </div>
+                  )}
+
+                  {product.settingType && (
+                    <div className="border-b border-slate-100 pb-1.5">
+                      <dt className="text-slate-400">Setting Style</dt>
+                      <dd className="font-semibold text-slate-800">{product.settingType}</dd>
+                    </div>
+                  )}
+
+                  {product.ringSize && (
+                    <div className="border-b border-slate-100 pb-1.5">
+                      <dt className="text-slate-400">Available Ring Sizes</dt>
+                      <dd className="font-semibold text-slate-800">{product.ringSize}</dd>
+                    </div>
+                  )}
+
+                  {product.bailOpening && (
+                    <div className="border-b border-slate-100 pb-1.5">
+                      <dt className="text-slate-400">Bail Inner Clearance</dt>
+                      <dd className="font-semibold text-slate-800">{product.bailOpening}</dd>
+                    </div>
+                  )}
+
+                  {(product.claspType || product.closureType) && (
+                    <div className="border-b border-slate-100 pb-1.5">
+                      <dt className="text-slate-400">Clasp / Closure</dt>
+                      <dd className="font-semibold text-slate-800">{product.claspType || product.closureType}</dd>
+                    </div>
+                  )}
+
+                  {product.bangleSize && (
+                    <div className="border-b border-slate-100 pb-1.5">
+                      <dt className="text-slate-400">Bangle Sizing</dt>
+                      <dd className="font-semibold text-slate-800">{product.bangleSize}</dd>
+                    </div>
+                  )}
+
+                  {product.earringBacking && (
+                    <div className="border-b border-slate-100 pb-1.5">
+                      <dt className="text-slate-400">Earring Fastening</dt>
+                      <dd className="font-semibold text-slate-800">{product.earringBacking}</dd>
+                    </div>
+                  )}
+
+                  <div className="border-b border-slate-100 pb-1.5">
+                    <dt className="text-slate-400">UK Hallmarking</dt>
+                    <dd className="font-semibold text-emerald-700">
+                      {product.hallmarked ? "✓ Verified UK Assay 925 Hallmark" : "Factory 925 Stamped"}
+                    </dd>
                   </div>
                 </dl>
               </div>

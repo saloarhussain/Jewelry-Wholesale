@@ -3,12 +3,22 @@ export interface ProductTier {
   discountPercentage: number;
 }
 
+export type JewelryCategory =
+  | "Rings"
+  | "Pendants"
+  | "Bracelets"
+  | "Necklaces"
+  | "Bangles"
+  | "Earrings"
+  | "Chains"
+  | "Anklets";
+
 export interface Product {
   id: string;
   name: string;
   slug: string;
   sku: string;
-  category: "Rings" | "Necklaces" | "Earrings" | "Bracelets" | "Chains";
+  category: JewelryCategory;
   shortDescription: string;
   description: string;
   priceGBP: number;
@@ -33,9 +43,40 @@ export interface Product {
   supplierProductCode?: string;
   supplierProductLink?: string;
   supplierPrice?: number;
+  // Flipkart & Amazon Style Type-Specific Specifications
+  jewelryType?: string;
+  subType?: string;
+  gemstoneType?: string;
+  stoneCut?: string;
+  stoneColor?: string;
+  stoneCount?: number;
+  caratWeight?: string;
+  settingType?: string;
+  claspType?: string;
+  chainType?: string;
+  chainLength?: string;
+  ringSize?: string;
+  bangleSize?: string;
+  closureType?: string;
+  bailOpening?: string;
+  earringBacking?: string;
+  metalColor?: string;
+  bulletPoints?: string[];
+  metaTitle?: string;
+  metaDescription?: string;
 }
 
 // Initial live catalog starts clean; populated dynamically from Supabase database
 export const PRODUCTS: Product[] = [];
 
-export const CATEGORIES = ["All", "Chains", "Rings", "Earrings", "Necklaces", "Bracelets"] as const;
+export const CATEGORIES = [
+  "All",
+  "Rings",
+  "Pendants",
+  "Bracelets",
+  "Necklaces",
+  "Bangles",
+  "Earrings",
+  "Chains",
+  "Anklets",
+] as const;

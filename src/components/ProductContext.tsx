@@ -7,6 +7,7 @@ import {
   isSupabaseConfigured,
   mapRowToProduct,
   mapProductToRow,
+  mapProductToLegacyRow,
 } from "@/lib/supabase";
 
 interface ProductContextType {
@@ -117,7 +118,18 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
         const row = mapProductToRow(newProduct);
         const { error } = await supabase.from("products").insert([row]);
         if (error) {
-          console.error("Supabase insert error:", error);
+          // If optional columns do not exist in SQL schema yet, fallback to legacy schema
+          if (error.message?.includes("does not exist") || (error as any).code === "PGRST204" || (error as any).code === "42703") {
+            const legacyRow = mapProductToLegacyRow(newProduct);
+            const { error: fallbackError } = await supabase.from("products").insert([legacyRow]);
+            if (fallbackError) {
+              console.error("Supabase fallback insert error:", fallbackError);
+            } else {
+              setIsDbConnected(true);
+            }
+          } else {
+            console.error("Supabase insert error:", error);
+          }
         } else {
           setIsDbConnected(true);
         }
@@ -138,7 +150,15 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
         const row = mapProductToRow(full);
         const { error } = await supabase.from("products").update(row).eq("id", id);
         if (error) {
-          console.error("Supabase update error:", error);
+          if (error.message?.includes("does not exist") || (error as any).code === "PGRST204" || (error as any).code === "42703") {
+            const legacyRow = mapProductToLegacyRow(full);
+            const { error: fallbackError } = await supabase.from("products").update(legacyRow).eq("id", id);
+            if (fallbackError) {
+              console.error("Supabase fallback update error:", fallbackError);
+            }
+          } else {
+            console.error("Supabase update error:", error);
+          }
         }
       } catch (err) {
         console.error("Failed to update product in Supabase:", err);
